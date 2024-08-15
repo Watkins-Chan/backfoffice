@@ -3,7 +3,7 @@ import { DashboardOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
-  DashboardOutlined,
+  DashboardOutlined
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
@@ -17,10 +17,10 @@ const dashboard = {
       id: 'dashboard',
       title: 'Dashboard',
       type: 'item',
-      url: '/dashboard/default',
+      url: '/dashboard',
       icon: icons.DashboardOutlined,
       breadcrumbs: false
-    },
+    }
   ]
 };
 

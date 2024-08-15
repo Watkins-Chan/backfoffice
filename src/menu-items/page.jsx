@@ -20,7 +20,7 @@ const pages = {
       type: 'item',
       url: '/genres',
       icon: icons.AppstoreOutlined,
-      breadcrumbs: false
+      breadcrumbs: true
     },
     {
       id: 'list',
@@ -28,7 +28,7 @@ const pages = {
       type: 'item',
       url: '/manga',
       icon: icons.UnorderedListOutlined,
-      breadcrumbs: false
+      breadcrumbs: true
     }
   ]
 };
