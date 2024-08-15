@@ -4,13 +4,9 @@ import { lazy } from 'react';
 import Loadable from 'components/Loadable';
 import Dashboard from 'layout/Dashboard';
 
-const Color = Loadable(lazy(() => import('pages/component-overview/color')));
-const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
-const Shadow = Loadable(lazy(() => import('pages/component-overview/shadows')));
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
-
-// render - sample page
-const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
+const Genres = Loadable(lazy(() => import('pages/genres/index')));
+const Manga = Loadable(lazy(() => import('pages/manga/index')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -18,14 +14,6 @@ const MainRoutes = {
   path: '/',
   element: <Dashboard />,
   children: [
-    {
-      path: '/',
-      element: <DashboardDefault />
-    },
-    {
-      path: 'color',
-      element: <Color />
-    },
     {
       path: 'dashboard',
       children: [
@@ -36,17 +24,13 @@ const MainRoutes = {
       ]
     },
     {
-      path: 'sample-page',
-      element: <SamplePage />
+      path: 'genres',
+      element: <Genres />
     },
     {
-      path: 'shadow',
-      element: <Shadow />
+      path: 'manga',
+      element: <Manga />
     },
-    {
-      path: 'typography',
-      element: <Typography />
-    }
   ]
 };
 

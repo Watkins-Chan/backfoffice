@@ -1,34 +1,34 @@
 // assets
-import { LoginOutlined, ProfileOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, UnorderedListOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
-  LoginOutlined,
-  ProfileOutlined
+  AppstoreOutlined,
+  UnorderedListOutlined
 };
 
 // ==============================|| MENU ITEMS - EXTRA PAGES ||============================== //
 
 const pages = {
-  id: 'authentication',
-  title: 'Authentication',
+  id: 'page',
+  title: 'Page',
   type: 'group',
   children: [
     {
-      id: 'login1',
-      title: 'Login',
+      id: 'genres',
+      title: 'Genres',
       type: 'item',
-      url: '/login',
-      icon: icons.LoginOutlined,
-      target: true
+      url: '/genres',
+      icon: icons.AppstoreOutlined,
+      breadcrumbs: false
     },
     {
-      id: 'register1',
-      title: 'Register',
+      id: 'list',
+      title: 'Manga',
       type: 'item',
-      url: '/register',
-      icon: icons.ProfileOutlined,
-      target: true
+      url: '/manga',
+      icon: icons.UnorderedListOutlined,
+      breadcrumbs: false
     }
   ]
 };
