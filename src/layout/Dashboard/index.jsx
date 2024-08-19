@@ -5,6 +5,8 @@ import { Outlet } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 // project import
 import Drawer from './Drawer';
@@ -36,6 +38,14 @@ export default function DashboardLayout() {
         <Toolbar />
         <Breadcrumbs navigation={navigation} title />
         <Outlet />
+        <Stack direction='row' alignItems='center' justifyContent='space-between' pt={3} px={2}>
+          <Typography variant='caption'>© All rights reserved</Typography>
+          <Stack direction='row'>
+            <Typography variant="caption">About us</Typography>
+            <Typography variant="caption" ml={1.5}>Privacy</Typography>
+            <Typography variant="caption" ml={1.5}>Terms</Typography>
+          </Stack>
+        </Stack>
       </Box>
     </Box>
   );
