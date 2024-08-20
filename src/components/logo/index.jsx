@@ -1,14 +1,16 @@
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 // material-ui
-import { ButtonBase } from '@mui/material';
-import Stack from '@mui/material/Stack';
-import Chip from '@mui/material/Chip';
+import { ButtonBase } from '@mui/material'
+import Stack from '@mui/material/Stack'
+import Chip from '@mui/material/Chip'
+import Typography from '@mui/material/Typography'
+import { BilibiliOutlined } from '@ant-design/icons'
 
 // project import
-import Logo from './LogoMain';
-import config from 'config';
+import Logo from './LogoMain'
+import config from 'config'
 
 // ==============================|| MAIN LOGO ||============================== //
 
@@ -16,7 +18,7 @@ const LogoSection = ({ sx, to }) => {
   return (
     <ButtonBase disableRipple component={Link} to={!to ? config.defaultPath : to} sx={sx}>
       <Stack direction="row" spacing={1} alignItems="center">
-        <Logo />
+        <BilibiliOutlined style={{ fontSize: '2.5rem' }} />
         <Chip
           label={import.meta.env.VITE_APP_VERSION}
           variant="outlined"
@@ -26,12 +28,12 @@ const LogoSection = ({ sx, to }) => {
         />
       </Stack>
     </ButtonBase>
-  );
-};
+  )
+}
 
 LogoSection.propTypes = {
   sx: PropTypes.object,
-  to: PropTypes.string
-};
+  to: PropTypes.string,
+}
 
-export default LogoSection;
+export default LogoSection
