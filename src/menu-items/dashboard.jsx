@@ -1,10 +1,10 @@
 // assets
-import { DashboardOutlined } from '@ant-design/icons';
+import { DashboardOutlined } from '@ant-design/icons'
 
 // icons
 const icons = {
-  DashboardOutlined
-};
+  DashboardOutlined,
+}
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
 
@@ -19,9 +19,9 @@ const dashboard = {
       type: 'item',
       url: '/dashboard',
       icon: icons.DashboardOutlined,
-      breadcrumbs: false
-    }
-  ]
-};
+      breadcrumbs: false,
+    },
+  ],
+}
 
-export default dashboard;
+export default dashboard
