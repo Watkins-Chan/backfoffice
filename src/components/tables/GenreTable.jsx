@@ -11,8 +11,13 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import { visuallyHidden } from '@mui/utils'
-import { EyeOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import {
+  // EyeOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from '@ant-design/icons'
 import DeleteModal from 'components/modals/DeleteModal'
+import GenreModal from 'components/modals/GenreModal'
 
 function createData(name, description) {
   return {
@@ -128,6 +133,7 @@ export default function GenreTable() {
   const [order, setOrder] = React.useState('asc')
   const [orderBy, setOrderBy] = React.useState('name')
   const [openDelModal, setDelModal] = React.useState(null)
+  const [openEditModal, setEditModal] = React.useState(false)
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc'
@@ -138,8 +144,16 @@ export default function GenreTable() {
   const handleOpenDelModal = (id) => {
     setDelModal(id)
   }
-  const handleCloseDelModal = (id) => {
+  const handleCloseDelModal = () => {
     setDelModal(null)
+  }
+
+  const handleOpenEditModal = (id) => {
+    setEditModal(id ?? true)
+  }
+
+  const handleCloseEditModal = () => {
+    setEditModal(false)
   }
 
   return (
@@ -151,18 +165,18 @@ export default function GenreTable() {
             {rows.map((row, index) => {
               const labelId = `genre-table-checkbox-${index}`
               return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.id} sx={{ cursor: 'pointer' }}>
+                <TableRow hover tabIndex={-1} key={row.id} sx={{ cursor: 'pointer' }}>
                   <TableCell component="th" id={labelId} scope="row" padding="none" width={300}>
                     {row.name}
                   </TableCell>
                   <TableCell>{row.description}</TableCell>
                   <TableCell align="center" width={250}>
                     <Stack spacing={1} direction="row" justifyContent="center">
-                      <IconButton color="inherit">
+                      {/* <IconButton color="inherit">
                         <EyeOutlined />
-                      </IconButton>
+                      </IconButton> */}
                       <IconButton color="primary">
-                        <EditOutlined />
+                        <EditOutlined onClick={() => handleOpenEditModal(index + 1)} />
                       </IconButton>
                       <IconButton color="error" onClick={() => handleOpenDelModal(index + 1)}>
                         <DeleteOutlined />
@@ -176,6 +190,7 @@ export default function GenreTable() {
         </Table>
       </TableContainer>
       {openDelModal && <DeleteModal handleClose={handleCloseDelModal} open={openDelModal} />}
+      {openEditModal && <GenreModal open={openEditModal} handleClose={handleCloseEditModal} />}
     </>
   )
 }

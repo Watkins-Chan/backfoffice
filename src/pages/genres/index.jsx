@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
@@ -25,12 +25,13 @@ export default function Genres() {
   const [row, setRow] = React.useState(10)
   const [openModal, setOpenModal] = React.useState(false)
 
-  const handleClickOpenModal = () => {
+  const handleClickOpenModal = useCallback(() => {
     setOpenModal(true)
-  }
-  const handleCloseModal = () => {
+  }, [])
+
+  const handleCloseModal = useCallback(() => {
     setOpenModal(false)
-  }
+  }, [])
 
   const handleChangeSort = (event) => {
     setSort(event.target.value)
