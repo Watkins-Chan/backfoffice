@@ -1,11 +1,11 @@
 // assets
-import { AppstoreOutlined, UnorderedListOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, UnorderedListOutlined } from '@ant-design/icons'
 
 // icons
 const icons = {
   AppstoreOutlined,
-  UnorderedListOutlined
-};
+  UnorderedListOutlined,
+}
 
 // ==============================|| MENU ITEMS - EXTRA PAGES ||============================== //
 
@@ -20,17 +20,17 @@ const pages = {
       type: 'item',
       url: '/genres',
       icon: icons.AppstoreOutlined,
-      breadcrumbs: true
+      breadcrumbs: true,
     },
     {
       id: 'list',
-      title: 'Manga',
+      title: 'List',
       type: 'item',
       url: '/manga',
       icon: icons.UnorderedListOutlined,
-      breadcrumbs: true
-    }
-  ]
-};
+      breadcrumbs: true,
+    },
+  ],
+}
 
-export default pages;
+export default pages
