@@ -22,6 +22,7 @@ import Chip from '@mui/material/Chip'
 import useTheme from '@mui/material/styles/useTheme'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { MoreOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import AdvanceSearch from 'components/searchs/AdvancedSearch'
 
 export default function Manga() {
   const theme = useTheme()
@@ -40,43 +41,7 @@ export default function Manga() {
   return (
     <Stack spacing={3}>
       <Box>
-        <Grid container spacing={2} alignItems="center" justifyContent="space-between">
-          <Grid item xs={12} sm={4} md={3}>
-            <TextField
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchOutlined />
-                  </InputAdornment>
-                ),
-              }}
-              fullWidth
-              label="Search"
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item xs={12} sm={4} md={3}>
-            <Grid container spacing={2} alignItems="center" justifyContent="flex-end">
-              <Grid item xs={12} sm>
-                <FormControl fullWidth size="small">
-                  <InputLabel sx={{ top: 2 }}>Sort by (default)</InputLabel>
-                  <Select value={sort} label="Sort" onChange={handleChange}>
-                    <MenuItem value="">Default</MenuItem>
-                    <MenuItem value={10}>Name (A-Z)</MenuItem>
-                    <MenuItem value={20}>Name (Z-A)</MenuItem>
-                    <MenuItem value={30}>Newest</MenuItem>
-                    <MenuItem value={40}>Oldest</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm="auto">
-                <Button fullWidth={matches} startIcon={<PlusOutlined />} variant="contained">
-                  Create
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
+        <AdvanceSearch />
       </Box>
       <Box>
         <Grid container spacing={2}>
@@ -99,20 +64,15 @@ export default function Manga() {
                   alt="Paella dish"
                 />
                 <CardContent>
-                  <Box>
-                    <Grid container spacing={1}>
-                      {[...Array(12)].map((_, index) => (
-                        <Grid item key={index}>
-                          <Chip size="small" variant="outlined" label="genre" />
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </Box>
+                  <Typography textTransform="uppercase" color={theme.palette.grey[500]}>
+                    Author
+                  </Typography>
                   <Typography
-                    mt={2}
+                    variant="h5"
+                    fontWeight={400}
                     sx={{
                       display: '-webkit-box',
-                      '-webkit-line-clamp': '4',
+                      '-webkit-line-clamp': '3',
                       '-webkit-box-orient': 'vertical',
                       overflow: 'hidden',
                     }}
