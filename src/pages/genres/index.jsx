@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, memo } from 'react'
 
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
@@ -21,7 +21,7 @@ import GenreModal from 'components/modals/GenreModal'
 import GenreTable from 'components/tables/GenreTable'
 import { useApiContext } from 'contexts/ApiContext'
 
-export default function Genres() {
+function Genres() {
   const { fetchApi, loading, error } = useApiContext()
   const [data, setData] = useState(null)
   const [sort, setSort] = useState('')
@@ -46,7 +46,7 @@ export default function Genres() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await fetchApi('https://jsonplaceholder.typicode.com/todos')
+      const result = await fetchApi('http://localhost:3001/genres')
       setData(result)
     }
     fetchData()
@@ -89,7 +89,7 @@ export default function Genres() {
           </Grid>
         </Box>
         <Divider />
-        <GenreTable />
+        <GenreTable genres={data} />
         <Box p={2}>
           <Grid container spacing={2} justifyContent="space-between" alignItems="center">
             <Grid item xs={3}>
@@ -117,3 +117,5 @@ export default function Genres() {
     </React.Fragment>
   )
 }
+
+export default memo(Genres)

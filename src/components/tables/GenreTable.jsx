@@ -1,4 +1,7 @@
 import * as React from 'react'
+import _map from 'lodash/map'
+import _get from 'lodash/get'
+
 import PropTypes from 'prop-types'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
@@ -11,11 +14,7 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import { visuallyHidden } from '@mui/utils'
-import {
-  // EyeOutlined,
-  DeleteOutlined,
-  EditOutlined,
-} from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import DeleteModal from 'components/modals/DeleteModal'
 import GenreModal from 'components/modals/GenreModal'
 
@@ -25,25 +24,6 @@ function createData(name, description) {
     description,
   }
 }
-
-const rows = [
-  createData('Cupcake', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'),
-  createData('Donut', 'What is Lorem Ipsum?'),
-  createData('Eclair', 'Why do we use it?'),
-  createData('Frozen yoghurt', 'Where can I get some?'),
-  createData('Gingerbread', 'Where does it come from?'),
-  createData('Honeycomb', 'Contrary to popular belief, Lorem Ipsum is not simply random text.'),
-  createData('Ice cream sandwich', 'The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested.'),
-  createData(
-    'Jelly Bean',
-    'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.',
-  ),
-  createData('KitKat', 'If you use this site regularly and would like to help keep the site on the Internet'),
-  createData('Lollipop', 'Thank you for your support'),
-  createData('Marshmallow', 'Can you help translate this site into a foreign language ?'),
-  createData('Nougat', 'Please email us with details if you can help.'),
-  createData('Oreo', 'The standard Lorem Ipsum passage, used since the 1500s'),
-]
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -129,17 +109,19 @@ GenreTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 }
 
-export default function GenreTable() {
+function GenreTable(props) {
+  const { genres } = props
+  console.log('genres', genres)
   const [order, setOrder] = React.useState('asc')
   const [orderBy, setOrderBy] = React.useState('name')
   const [openDelModal, setDelModal] = React.useState(null)
   const [openEditModal, setEditModal] = React.useState(false)
 
-  const handleRequestSort = (event, property) => {
+  const handleRequestSort = React.useCallback((event, property) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
-  }
+  }, [])
 
   const handleOpenDelModal = (id) => {
     setDelModal(id)
@@ -156,6 +138,8 @@ export default function GenreTable() {
     setEditModal(false)
   }
 
+  const rows = _map(genres, (genre) => createData(_get(genre, 'genre_name', ''), _get(genre, 'description', '')))
+
   return (
     <>
       <TableContainer>
@@ -165,18 +149,15 @@ export default function GenreTable() {
             {rows.map((row, index) => {
               const labelId = `genre-table-checkbox-${index}`
               return (
-                <TableRow hover tabIndex={-1} key={row.id} sx={{ cursor: 'pointer' }}>
+                <TableRow hover tabIndex={-1} key={labelId} sx={{ cursor: 'pointer' }}>
                   <TableCell component="th" id={labelId} scope="row" padding="none" width={300}>
                     {row.name}
                   </TableCell>
                   <TableCell>{row.description}</TableCell>
                   <TableCell align="center" width={250}>
                     <Stack spacing={1} direction="row" justifyContent="center">
-                      {/* <IconButton color="inherit">
-                        <EyeOutlined />
-                      </IconButton> */}
-                      <IconButton color="primary">
-                        <EditOutlined onClick={() => handleOpenEditModal(index + 1)} />
+                      <IconButton color="primary" onClick={() => handleOpenEditModal(index + 1)}>
+                        <EditOutlined />
                       </IconButton>
                       <IconButton color="error" onClick={() => handleOpenDelModal(index + 1)}>
                         <DeleteOutlined />
@@ -194,3 +175,5 @@ export default function GenreTable() {
     </>
   )
 }
+
+export default React.memo(GenreTable)
