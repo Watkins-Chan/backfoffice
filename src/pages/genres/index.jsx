@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
@@ -19,11 +19,14 @@ import Typography from '@mui/material/Typography'
 import { SearchOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import GenreModal from 'components/modals/GenreModal'
 import GenreTable from 'components/tables/GenreTable'
+import { useApiContext } from 'contexts/ApiContext'
 
 export default function Genres() {
-  const [sort, setSort] = React.useState('')
-  const [row, setRow] = React.useState(10)
-  const [openModal, setOpenModal] = React.useState(false)
+  const { fetchApi, loading, error } = useApiContext()
+  const [data, setData] = useState(null)
+  const [sort, setSort] = useState('')
+  const [row, setRow] = useState(10)
+  const [openModal, setOpenModal] = useState(false)
 
   const handleClickOpenModal = useCallback(() => {
     setOpenModal(true)
@@ -40,6 +43,14 @@ export default function Genres() {
   const handleChangeRow = (event) => {
     setRow(event.target.value)
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await fetchApi('https://jsonplaceholder.typicode.com/todos')
+      setData(result)
+    }
+    fetchData()
+  }, [])
 
   return (
     <React.Fragment>

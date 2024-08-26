@@ -1,10 +1,11 @@
-import { RouterProvider } from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom'
 
 // project import
-import router from 'routes';
-import ThemeCustomization from 'themes';
+import router from 'routes'
+import ThemeCustomization from 'themes'
 
-import ScrollTop from 'components/ScrollTop';
+import ScrollTop from 'components/ScrollTop'
+import { ApiProvider } from 'contexts/ApiContext'
 
 // ==============================|| APP - THEME, ROUTER, LOCAL ||============================== //
 
@@ -12,8 +13,10 @@ export default function App() {
   return (
     <ThemeCustomization>
       <ScrollTop>
-        <RouterProvider router={router} />
+        <ApiProvider>
+          <RouterProvider router={router} />
+        </ApiProvider>
       </ScrollTop>
     </ThemeCustomization>
-  );
+  )
 }
