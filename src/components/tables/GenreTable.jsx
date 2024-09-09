@@ -111,7 +111,6 @@ GenreTableHead.propTypes = {
 
 function GenreTable(props) {
   const { genres } = props
-  console.log('genres', genres)
   const [order, setOrder] = React.useState('asc')
   const [orderBy, setOrderBy] = React.useState('name')
   const [openDelModal, setDelModal] = React.useState(null)
