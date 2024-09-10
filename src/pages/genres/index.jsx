@@ -1,51 +1,47 @@
-import React, { useCallback, useEffect, useState, memo } from 'react'
-
-import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-import Stack from '@mui/material/Stack'
-import Divider from '@mui/material/Divider'
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import Tooltip from '@mui/material/Tooltip'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
-import Pagination from '@mui/material/Pagination'
-import Typography from '@mui/material/Typography'
-
+import React, { useState, useEffect, useCallback, memo } from 'react'
+import _get from 'lodash/get'
+import { Card, Grid, Box, Stack, Button, Select, MenuItem, FormControl, Typography, Divider, Pagination, TextField, Tooltip, IconButton } from '@mui/material'
 import { SearchOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
-import GenreModal from 'components/modals/GenreModal'
 import GenreTable from 'components/tables/GenreTable'
+import GenreModal from 'components/modals/GenreModal'
+import { GENRES_API } from 'api/constants'
+import { useURLParams } from 'hooks/useURLParams '
 import { useApiContext } from 'contexts/ApiContext'
 
 function Genres() {
-  const { data, loading, error, fetchData } = useApiContext()
+  const { getParam, setParam } = useURLParams()
+  const { data, loading, error, fetchData, page } = useApiContext()
+
   const [sort, setSort] = useState('')
-  const [row, setRow] = useState(10)
+  const [row, setRow] = useState(() => getParam('pageSize', 10))
+  const [currentPage, setCurrentPage] = useState(() => getParam('currentPage', 1))
   const [openModal, setOpenModal] = useState(false)
 
-  const handleClickOpenModal = useCallback(() => {
-    setOpenModal(true)
-  }, [])
+  const handleClickOpenModal = useCallback(() => setOpenModal(true), [])
+  const handleCloseModal = useCallback(() => setOpenModal(false), [])
 
-  const handleCloseModal = useCallback(() => {
-    setOpenModal(false)
-  }, [])
+  const handleChangeSort = useCallback((event) => setSort(event.target.value), [])
 
-  const handleChangeSort = (event) => {
-    setSort(event.target.value)
-  }
+  const handleChangeRow = useCallback(
+    (event) => {
+      const newPageSize = event.target.value
+      setRow(newPageSize)
+      setParam('pageSize', newPageSize)
+    },
+    [setParam],
+  )
 
-  const handleChangeRow = (event) => {
-    setRow(event.target.value)
-  }
+  const handleChangePage = useCallback(
+    (event, value) => {
+      setCurrentPage(value)
+      setParam('currentPage', value)
+    },
+    [setParam],
+  )
 
   useEffect(() => {
-    fetchData('http://localhost:3001/genres')
-  }, [])
+    fetchData(`${GENRES_API}?pageSize=${row}&currentPage=${currentPage}`)
+  }, [row, currentPage])
 
   return (
     <React.Fragment>
@@ -65,8 +61,7 @@ function Genres() {
             <Grid item xs={12} md="auto">
               <Stack direction="row" alignItems="center">
                 <FormControl fullWidth sx={{ width: 200 }}>
-                  <InputLabel id="demo-simple-select-label">Sort by</InputLabel>
-                  <Select labelId="demo-simple-select-label" id="demo-simple-select" value={sort} label="Sort by" onChange={handleChangeSort}>
+                  <Select label="Sort by" value={sort} onChange={handleChangeSort}>
                     <MenuItem value={10}>A-Z</MenuItem>
                     <MenuItem value={20}>Z-A</MenuItem>
                   </Select>
@@ -103,7 +98,7 @@ function Genres() {
               </Stack>
             </Grid>
             <Grid item>
-              <Pagination count={10} showFirstButton showLastButton />
+              <Pagination count={_get(page, '_totalPages', 0)} showFirstButton showLastButton page={currentPage} onChange={handleChangePage} />
             </Grid>
           </Grid>
         </Box>

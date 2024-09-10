@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
+import { useNavigate, useLocation } from 'react-router-dom'
+
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
@@ -62,8 +64,8 @@ const schema = yup.object({
 
 const GenreModal = (props) => {
   const { open, handleClose } = props
-  const { createData, data, loading, error } = useApiContext()
-
+  const { fetchData, data, loading, error } = useApiContext()
+  const id = typeof open === 'string' && open
   const {
     control,
     handleSubmit,
@@ -73,19 +75,21 @@ const GenreModal = (props) => {
     resolver: yupResolver(schema),
   })
 
-  const onSubmit = (data) => {
-    createData(GENRES_API, data)
-  }
-
   const onReset = () => {
     reset({ description: '', genre_name: '' })
   }
 
+  const onSubmit = async (data) => {
+    await createData(GENRES_API, data)
+    handleClose()
+    onReset()
+  }
+
   useEffect(() => {
-    if (!loading) {
-      handleClose()
+    if (id) {
+      fetchData(`${GENRES_API}/${id}`)
     }
-  }, [loading])
+  }, [id])
 
   return (
     <BootstrapDialog maxWidth="sm" fullWidth scroll="body" onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>

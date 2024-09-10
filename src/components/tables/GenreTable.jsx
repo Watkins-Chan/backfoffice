@@ -1,6 +1,7 @@
 import * as React from 'react'
 import _map from 'lodash/map'
 import _get from 'lodash/get'
+import { format } from 'date-fns'
 
 import PropTypes from 'prop-types'
 import Box from '@mui/material/Box'
@@ -18,10 +19,12 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import DeleteModal from 'components/modals/DeleteModal'
 import GenreModal from 'components/modals/GenreModal'
 
-function createData(name, description) {
+function createData(id, name, description, createdDate) {
   return {
+    id,
     name,
     description,
+    createdDate,
   }
 }
 
@@ -63,6 +66,12 @@ const headCells = [
     actions: false,
     disablePadding: false,
     label: 'Description',
+  },
+  {
+    id: 'createdDate',
+    actions: false,
+    disablePadding: false,
+    label: 'Create Date',
   },
   {
     id: 'actions',
@@ -137,7 +146,9 @@ function GenreTable(props) {
     setEditModal(false)
   }
 
-  const rows = _map(genres, (genre) => createData(_get(genre, 'genre_name', ''), _get(genre, 'description', '')))
+  const rows = _map(genres, (genre) =>
+    createData(_get(genre, '_id', ''), _get(genre, 'genre_name', ''), _get(genre, 'description', ''), format(new Date(_get(genre, 'createdAt', new Date())), 'MM/dd/yyyy HH:mm')),
+  )
 
   return (
     <>
@@ -149,16 +160,17 @@ function GenreTable(props) {
               const labelId = `genre-table-checkbox-${index}`
               return (
                 <TableRow hover tabIndex={-1} key={labelId} sx={{ cursor: 'pointer' }}>
-                  <TableCell component="th" id={labelId} scope="row" padding="none" width={300}>
+                  <TableCell component="th" id={labelId} scope="row" padding="none" width={240}>
                     {row.name}
                   </TableCell>
                   <TableCell>{row.description}</TableCell>
+                  <TableCell width={200}>{row.createdDate}</TableCell>
                   <TableCell align="center" width={250}>
                     <Stack spacing={1} direction="row" justifyContent="center">
-                      <IconButton color="primary" onClick={() => handleOpenEditModal(index + 1)}>
+                      <IconButton color="primary" onClick={() => handleOpenEditModal(row.id)}>
                         <EditOutlined />
                       </IconButton>
-                      <IconButton color="error" onClick={() => handleOpenDelModal(index + 1)}>
+                      <IconButton color="error" onClick={() => handleOpenDelModal(row.id)}>
                         <DeleteOutlined />
                       </IconButton>
                     </Stack>

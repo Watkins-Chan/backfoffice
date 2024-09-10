@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -9,12 +9,23 @@ import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton'
 import Box from '@mui/material/Box'
 import { DeleteFilled } from '@ant-design/icons'
 import { lighten } from '@mui/system'
+import { useApiContext } from 'contexts/ApiContext'
+import { GENRES_API } from 'api/constants'
 
 export default function DeleteModal(props) {
   const { open, handleClose } = props
+  const { deleteData, data, loading, error } = useApiContext()
+  const id = open
+
+  const onDeleteItem = async (id) => {
+    await deleteData(`${GENRES_API}/${id}`, GENRES_API)
+    handleClose()
+  }
+
   return (
     <Dialog maxWidth="xs" fullWidth open={open} onClose={handleClose} sx={{ '& .MuiBackdrop-root': { backgroundColor: 'rgba(0,0,0,0.7)' } }}>
       <DialogContent>
@@ -24,16 +35,16 @@ export default function DeleteModal(props) {
           </Avatar>
           <Typography variant="h4">Are you sure you want to delete?</Typography>
           <Typography align="center">
-            By deleting "<b>name</b>" user, all task assigned to that user will also be deleted.
+            By deleting "<b>{id}</b>" user, all task assigned to that user will also be deleted.
           </Typography>
         </Stack>
         <Stack direction="row" spacing={2} mt={3.5}>
           <Button variant="outlined" color="inherit" fullWidth onClick={handleClose}>
             Cancel
           </Button>
-          <Button color="error" variant="contained" fullWidth onClick={handleClose}>
+          <LoadingButton color="error" fullWidth loading={loading} loadingPosition="start" variant="contained" onClick={() => onDeleteItem(id)}>
             Delete
-          </Button>
+          </LoadingButton>
         </Stack>
       </DialogContent>
     </Dialog>
