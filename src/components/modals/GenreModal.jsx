@@ -19,6 +19,7 @@ import Stack from '@mui/material/Stack'
 
 import { CloseOutlined, SaveOutlined } from '@ant-design/icons'
 import { useApiContext } from 'contexts/ApiContext'
+import { GENRES_API } from 'api/constants'
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -61,7 +62,7 @@ const schema = yup.object({
 
 const GenreModal = (props) => {
   const { open, handleClose } = props
-  const { fetchApi, loading, error } = useApiContext()
+  const { createData, data, loading, error } = useApiContext()
 
   const {
     control,
@@ -73,13 +74,7 @@ const GenreModal = (props) => {
   })
 
   const onSubmit = (data) => {
-    fetchApi('http://localhost:3001/genres', {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    createData(GENRES_API, data)
   }
 
   const onReset = () => {

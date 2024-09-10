@@ -22,8 +22,7 @@ import GenreTable from 'components/tables/GenreTable'
 import { useApiContext } from 'contexts/ApiContext'
 
 function Genres() {
-  const { fetchApi, loading, error } = useApiContext()
-  const [data, setData] = useState(null)
+  const { data, loading, error, fetchData } = useApiContext()
   const [sort, setSort] = useState('')
   const [row, setRow] = useState(10)
   const [openModal, setOpenModal] = useState(false)
@@ -45,11 +44,7 @@ function Genres() {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await fetchApi('http://localhost:3001/genres')
-      setData(result)
-    }
-    fetchData()
+    fetchData('http://localhost:3001/genres')
   }, [])
 
   return (
