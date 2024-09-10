@@ -4,49 +4,60 @@ const ApiContext = createContext(undefined)
 
 export const ApiProvider = ({ children }) => {
   const [data, setData] = useState([])
+  const [page, setPage] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  const fetchData = async (url) => {
+  const handleApiRequest = async (url, options = {}, optionUrl) => {
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(url)
+      const response = await fetch(url, options)
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`)
       }
-      const data = await response.json()
-      setData(data)
+      const responseData = await response.json()
+      setData(responseData.data)
+      setPage(responseData.page)
     } catch (err) {
       setError(err.message)
     } finally {
       setLoading(false)
     }
   }
+
+  const fetchData = (url) => handleApiRequest(url)
 
   const createData = async (url, payload, optionUrl) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`)
-      }
-      await fetchData(optionUrl || url)
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
+    await handleApiRequest(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+    fetchData(optionUrl || url)
   }
 
-  return <ApiContext.Provider value={{ data, loading, error, fetchData, createData }}>{children}</ApiContext.Provider>
+  const updateData = async (url, payload, optionUrl) => {
+    await handleApiRequest(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+    fetchData(optionUrl || url)
+  }
+
+  const deleteData = async (url, optionUrl) => {
+    await handleApiRequest(url, {
+      method: 'DELETE',
+    })
+    fetchData(optionUrl || url)
+  }
+
+  return <ApiContext.Provider value={{ data, page, loading, error, fetchData, createData, updateData, deleteData }}>{children}</ApiContext.Provider>
 }
 
 export const useApiContext = () => {
