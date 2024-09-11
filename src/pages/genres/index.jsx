@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useCallback, memo } from 'react'
+import React, { useState, useCallback, memo } from 'react'
 import _get from 'lodash/get'
 import { Card, Grid, Box, Stack, Button, Select, MenuItem, FormControl, Typography, Divider, Pagination, TextField, Tooltip, IconButton } from '@mui/material'
 import { SearchOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import GenreTable from 'components/tables/GenreTable'
 import GenreModal from 'components/modals/GenreModal'
-import { GENRES_API } from 'api/constants'
-import { useURLParams } from 'hooks/useURLParams'
-import { useApiContext } from 'contexts/ApiContext'
+import { useURLParams } from 'customHooks/useURLParams'
+import { useGenres } from 'apiHooks/useGenres'
 
 function Genres() {
   const { getParam, setParam } = useURLParams()
-  const { data, loading, error, fetchData, page } = useApiContext()
 
-  const [sort, setSort] = useState('')
   const [row, setRow] = useState(() => getParam('pageSize', 10))
   const [currentPage, setCurrentPage] = useState(() => getParam('currentPage', 1))
+  const [sort, setSort] = useState('')
   const [openModal, setOpenModal] = useState(false)
+
+  const { data: genres, error } = useGenres(row, currentPage)
 
   const handleClickOpenModal = useCallback(() => setOpenModal(true), [])
   const handleCloseModal = useCallback(() => setOpenModal(false), [])
@@ -27,6 +27,7 @@ function Genres() {
       const newPageSize = event.target.value
       setRow(newPageSize)
       setParam('pageSize', newPageSize)
+      setCurrentPage(1)
     },
     [setParam],
   )
@@ -38,10 +39,6 @@ function Genres() {
     },
     [setParam],
   )
-
-  useEffect(() => {
-    fetchData(`${GENRES_API}?pageSize=${row}&currentPage=${currentPage}`)
-  }, [row, currentPage])
 
   return (
     <React.Fragment>
@@ -79,7 +76,7 @@ function Genres() {
           </Grid>
         </Box>
         <Divider />
-        <GenreTable genres={data} />
+        {!genres ? <div>Loading...</div> : <GenreTable genres={_get(genres, 'data', [])} />}
         <Box p={2}>
           <Grid container spacing={2} justifyContent="space-between" alignItems="center">
             <Grid item xs={3}>
@@ -98,7 +95,7 @@ function Genres() {
               </Stack>
             </Grid>
             <Grid item>
-              <Pagination count={_get(page, '_totalPages', 0)} showFirstButton showLastButton page={currentPage} onChange={handleChangePage} />
+              <Pagination count={_get(genres, 'page._totalPages', 0)} showFirstButton showLastButton page={currentPage} onChange={handleChangePage} />
             </Grid>
           </Grid>
         </Box>

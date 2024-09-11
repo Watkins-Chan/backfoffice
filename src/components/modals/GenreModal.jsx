@@ -1,27 +1,26 @@
-import React, { useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { useNavigate, useLocation } from 'react-router-dom'
-
+import React, { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
+import _get from 'lodash/get'
+import _isEmpty from 'lodash/isEmpty'
+
 import Button from '@mui/material/Button'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { alpha, styled } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import IconButton from '@mui/material/IconButton'
 import InputLabel from '@mui/material/InputLabel'
-import InputBase from '@mui/material/InputBase'
 import TextField from '@mui/material/TextField'
 import FormControl from '@mui/material/FormControl'
 import Stack from '@mui/material/Stack'
 
 import { CloseOutlined, SaveOutlined } from '@ant-design/icons'
-import { useApiContext } from 'contexts/ApiContext'
-import { GENRES_API } from 'api/constants'
+import { useCreateGenre, useUpdateGenre, useGenre } from 'apiHooks/useGenres'
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -64,8 +63,12 @@ const schema = yup.object({
 
 const GenreModal = (props) => {
   const { open, handleClose } = props
-  const { fetchData, data, loading, error } = useApiContext()
   const id = typeof open === 'string' && open
+
+  const { createGenre, isLoading: isCreating } = useCreateGenre()
+  const { updateGenre, isLoading: isUpdating } = useUpdateGenre()
+  const { data: genre } = useGenre(id)
+
   const {
     control,
     handleSubmit,
@@ -80,21 +83,22 @@ const GenreModal = (props) => {
   }
 
   const onSubmit = async (data) => {
-    await createData(GENRES_API, data)
+    const switchApi = id ? updateGenre(id, data) : createGenre(data)
+    await switchApi
     handleClose()
     onReset()
   }
 
   useEffect(() => {
-    if (id) {
-      fetchData(`${GENRES_API}/${id}`)
+    if (!_isEmpty(genre)) {
+      reset({ genre_name: _get(genre, 'genre_name', ''), description: _get(genre, 'description', '') })
     }
-  }, [id])
+  }, [genre])
 
   return (
     <BootstrapDialog maxWidth="sm" fullWidth scroll="body" onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
       <DialogTitle sx={{ m: 0, p: 2, fontSize: '1rem', fontWeight: 500 }} id="customized-dialog-title">
-        Create genre
+        {id ? 'Edit' : 'Create'}
       </DialogTitle>
       <IconButton
         aria-label="close"
@@ -151,7 +155,7 @@ const GenreModal = (props) => {
         >
           Cancel
         </Button>
-        <LoadingButton loading={loading} loadingPosition="start" startIcon={<SaveOutlined />} variant="contained" onClick={handleSubmit(onSubmit)}>
+        <LoadingButton loading={isCreating || isUpdating} loadingPosition="start" startIcon={<SaveOutlined />} variant="contained" onClick={handleSubmit(onSubmit)}>
           Save
         </LoadingButton>
       </DialogActions>

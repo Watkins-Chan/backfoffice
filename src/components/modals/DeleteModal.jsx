@@ -13,16 +13,16 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import Box from '@mui/material/Box'
 import { DeleteFilled } from '@ant-design/icons'
 import { lighten } from '@mui/system'
-import { useApiContext } from 'contexts/ApiContext'
 import { GENRES_API } from 'api/constants'
+import { useDeleteGenre } from 'apiHooks/useGenres'
 
 export default function DeleteModal(props) {
   const { open, handleClose } = props
-  const { deleteData, data, loading, error } = useApiContext()
+  const { deleteGenre, isLoading: isDeleting } = useDeleteGenre()
   const id = open
 
   const onDeleteItem = async (id) => {
-    await deleteData(`${GENRES_API}/${id}`, GENRES_API)
+    await deleteGenre(id)
     handleClose()
   }
 
@@ -42,7 +42,7 @@ export default function DeleteModal(props) {
           <Button variant="outlined" color="inherit" fullWidth onClick={handleClose}>
             Cancel
           </Button>
-          <LoadingButton color="error" fullWidth loading={loading} loadingPosition="start" variant="contained" onClick={() => onDeleteItem(id)}>
+          <LoadingButton color="error" fullWidth loading={isDeleting} loadingPosition="start" variant="contained" onClick={() => onDeleteItem(id)}>
             Delete
           </LoadingButton>
         </Stack>
