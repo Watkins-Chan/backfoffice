@@ -5,7 +5,7 @@ import router from 'routes'
 import ThemeCustomization from 'themes'
 
 import ScrollTop from 'components/ScrollTop'
-import { ApiProvider } from 'contexts/ApiContext'
+import { AlertProvider } from 'contexts/AlertContent'
 
 // ==============================|| APP - THEME, ROUTER, LOCAL ||============================== //
 
@@ -13,9 +13,9 @@ export default function App() {
   return (
     <ThemeCustomization>
       <ScrollTop>
-        <ApiProvider>
+        <AlertProvider>
           <RouterProvider router={router} />
-        </ApiProvider>
+        </AlertProvider>
       </ScrollTop>
     </ThemeCustomization>
   )
