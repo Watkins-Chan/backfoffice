@@ -5,7 +5,7 @@ import { SearchOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import GenreTable from 'components/tables/GenreTable'
 import GenreModal from 'components/modals/GenreModal'
 import { GENRES_API } from 'api/constants'
-import { useURLParams } from 'hooks/useURLParams '
+import { useURLParams } from 'hooks/useURLParams'
 import { useApiContext } from 'contexts/ApiContext'
 
 function Genres() {
