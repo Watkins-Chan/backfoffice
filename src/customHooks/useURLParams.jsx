@@ -6,13 +6,16 @@ export const useURLParams = () => {
 
   const getParam = (param, defaultValue) => {
     const params = new URLSearchParams(location.search)
-    return params.get(param) ? parseInt(params.get(param), 10) : defaultValue
+    const value = params.get(param)
+    return value !== null ? value : defaultValue
   }
 
   const setParam = (param, value) => {
-    const params = new URLSearchParams(location.search)
-    params.set(param, value)
-    navigate(`?${params.toString()}`)
+    const urlParams = new URLSearchParams(window.location.search)
+    urlParams.set(param, value)
+
+    const newURL = `${window.location.pathname}?${urlParams.toString()}`
+    window.history.replaceState(null, '', newURL)
   }
 
   return { getParam, setParam }
