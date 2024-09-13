@@ -1,5 +1,5 @@
-import { useForm, Controller } from 'react-hook-form'
 import React, { useEffect, useState } from 'react'
+import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
@@ -20,7 +20,8 @@ import FormControl from '@mui/material/FormControl'
 import Stack from '@mui/material/Stack'
 
 import { CloseOutlined, SaveOutlined } from '@ant-design/icons'
-import { useCreateGenre, useUpdateGenre, useGenre } from 'apiHooks/useGenres'
+import { useCreateGenre, useUpdateGenre, useGenre, useGenres } from 'apiHooks/useGenres'
+import { useURLParams } from 'customHooks/useURLParams'
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -63,11 +64,16 @@ const schema = yup.object({
 
 const GenreModal = (props) => {
   const { open, handleClose } = props
+  const { getParam } = useURLParams()
   const id = typeof open === 'string' && open
+  const sort = getParam('sort', 'createdAt-desc')
+  const sortBy = sort ? sort.split('-')[0] : null
+  const sortOrder = sort ? sort.split('-')[1] : null
 
   const { createGenre, isLoading: isCreating } = useCreateGenre()
   const { updateGenre, isLoading: isUpdating } = useUpdateGenre()
   const { data: genre } = useGenre(id)
+  const { mutate: refetchGenres } = useGenres(getParam('pageSize', 10), getParam('currentPage', 1), getParam('q', null), sortBy, sortOrder)
 
   const {
     control,
@@ -85,6 +91,7 @@ const GenreModal = (props) => {
   const onSubmit = async (data) => {
     const switchApi = id ? updateGenre(id, data) : createGenre(data)
     await switchApi
+    await refetchGenres()
     handleClose()
     onReset()
   }

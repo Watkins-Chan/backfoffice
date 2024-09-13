@@ -1,44 +1,100 @@
-import React, { useState, useCallback, memo } from 'react'
+import React, { useState, useCallback, memo, useEffect } from 'react'
+
 import _get from 'lodash/get'
-import { Card, Grid, Box, Stack, Button, Select, MenuItem, FormControl, Typography, Divider, Pagination, TextField, Tooltip, IconButton } from '@mui/material'
+
 import { SearchOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
+
+import { useTheme } from '@mui/material/styles'
+
+import InputLabel from '@mui/material/InputLabel'
+import Card from '@mui/material/Card'
+import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Button from '@mui/material/Button'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Typography from '@mui/material/Typography'
+import Divider from '@mui/material/Divider'
+import Pagination from '@mui/material/Pagination'
+import TextField from '@mui/material/TextField'
+import Tooltip from '@mui/material/Tooltip'
+import IconButton from '@mui/material/IconButton'
+
 import GenreTable from 'components/tables/GenreTable'
 import GenreModal from 'components/modals/GenreModal'
 import { useURLParams } from 'customHooks/useURLParams'
 import { useGenres } from 'apiHooks/useGenres'
 
 function Genres() {
+  const theme = useTheme()
   const { getParam, setParam } = useURLParams()
 
   const [row, setRow] = useState(() => getParam('pageSize', 10))
   const [currentPage, setCurrentPage] = useState(() => getParam('currentPage', 1))
-  const [sort, setSort] = useState('')
+  const [sort, setSort] = useState(() => getParam('sort', 'createdAt-desc'))
+  const [searchKeyword, setSearchKeyword] = useState(() => getParam('q', null))
+  const [inputValue, setInputValue] = useState(searchKeyword)
+
   const [openModal, setOpenModal] = useState(false)
 
-  const { data: genres, error } = useGenres(row, currentPage)
+  const sortBy = sort ? sort.split('-')[0] : null
+  const sortOrder = sort ? sort.split('-')[1] : null
+
+  const { data: genres, error, isLoading: isGettingGenres } = useGenres(row, currentPage, searchKeyword, sortBy, sortOrder)
 
   const handleClickOpenModal = useCallback(() => setOpenModal(true), [])
   const handleCloseModal = useCallback(() => setOpenModal(false), [])
 
-  const handleChangeSort = useCallback((event) => setSort(event.target.value), [])
+  const updateParams = useCallback((newParams) => {
+    const urlParams = new URLSearchParams(window.location.search)
 
-  const handleChangeRow = useCallback(
+    Object.entries(newParams).forEach(([key, value]) => {
+      urlParams.set(key, value)
+    })
+
+    const newURL = `${window.location.pathname}?${urlParams.toString()}`
+    window.history.replaceState(null, '', newURL)
+  }, [])
+
+  const handleChangeSort = useCallback(
     (event) => {
-      const newPageSize = event.target.value
-      setRow(newPageSize)
-      setParam('pageSize', newPageSize)
+      const value = event.target.value
+      setSort(value)
+      setParam('sort', value)
       setCurrentPage(1)
     },
     [setParam],
   )
 
+  const handleChangeRow = useCallback(
+    (event) => {
+      const newPageSize = event.target.value
+      setRow(newPageSize)
+      setCurrentPage(1)
+      updateParams({ pageSize: newPageSize, currentPage: 1 })
+    },
+    [updateParams],
+  )
+
   const handleChangePage = useCallback(
     (event, value) => {
       setCurrentPage(value)
-      setParam('currentPage', value)
+      updateParams({ currentPage: value })
     },
-    [setParam],
+    [updateParams],
   )
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value)
+  }
+
+  const handleSearch = () => {
+    setSearchKeyword(inputValue.trim())
+    setParam('q', inputValue.trim())
+    setCurrentPage(1)
+  }
 
   return (
     <React.Fragment>
@@ -46,21 +102,31 @@ function Genres() {
         <Box p={2}>
           <Grid container spacing={2} alignItems="center" justifyContent="space-between">
             <Grid item xs={12} md="auto">
-              <TextField
-                placeholder="Search..."
-                variant="outlined"
-                fullWidth
-                InputProps={{
-                  startAdornment: <SearchOutlined />,
-                }}
-              />
+              <Box display="flex" alignItems="center">
+                <TextField
+                  placeholder="Search..."
+                  variant="outlined"
+                  fullWidth
+                  value={inputValue}
+                  onChange={handleInputChange}
+                  InputProps={{
+                    startAdornment: <SearchOutlined />,
+                  }}
+                />
+                <Button sx={{ marginLeft: 2 }} variant="contained" onClick={handleSearch}>
+                  Search
+                </Button>
+              </Box>
             </Grid>
             <Grid item xs={12} md="auto">
               <Stack direction="row" alignItems="center">
                 <FormControl fullWidth sx={{ width: 200 }}>
+                  <InputLabel>Sort by</InputLabel>
                   <Select label="Sort by" value={sort} onChange={handleChangeSort}>
-                    <MenuItem value={10}>A-Z</MenuItem>
-                    <MenuItem value={20}>Z-A</MenuItem>
+                    <MenuItem value="name-asc">A-Z</MenuItem>
+                    <MenuItem value="name-desc">Z-A</MenuItem>
+                    <MenuItem value="createdAt-desc">Newest</MenuItem>
+                    <MenuItem value="createdAt-asc">Oldest</MenuItem>
                   </Select>
                 </FormControl>
                 <Button sx={{ marginX: 2 }} variant="contained" startIcon={<PlusOutlined />} onClick={handleClickOpenModal}>
@@ -76,7 +142,7 @@ function Genres() {
           </Grid>
         </Box>
         <Divider />
-        {!genres ? <div>Loading...</div> : <GenreTable genres={_get(genres, 'data', [])} />}
+        <GenreTable loading={isGettingGenres} genres={_get(genres, 'data', [])} />
         <Box p={2}>
           <Grid container spacing={2} justifyContent="space-between" alignItems="center">
             <Grid item xs={3}>

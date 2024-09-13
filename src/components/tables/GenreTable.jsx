@@ -14,6 +14,7 @@ import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
+import Skeleton from '@mui/material/Skeleton'
 import { visuallyHidden } from '@mui/utils'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import DeleteModal from 'components/modals/DeleteModal'
@@ -119,7 +120,7 @@ GenreTableHead.propTypes = {
 }
 
 function GenreTable(props) {
-  const { genres } = props
+  const { genres, loading } = props
   const [order, setOrder] = React.useState('asc')
   const [orderBy, setOrderBy] = React.useState('name')
   const [openDelModal, setDelModal] = React.useState(null)
@@ -156,28 +157,58 @@ function GenreTable(props) {
         <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
           <GenreTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} />
           <TableBody>
-            {rows.map((row, index) => {
-              const labelId = `genre-table-checkbox-${index}`
-              return (
-                <TableRow hover tabIndex={-1} key={labelId} sx={{ cursor: 'pointer' }}>
-                  <TableCell component="th" id={labelId} scope="row" padding="none" width={240}>
-                    {row.name}
-                  </TableCell>
-                  <TableCell>{row.description}</TableCell>
-                  <TableCell width={200}>{row.createdDate}</TableCell>
-                  <TableCell align="center" width={250}>
-                    <Stack spacing={1} direction="row" justifyContent="center">
-                      <IconButton color="primary" onClick={() => handleOpenEditModal(row.id)}>
-                        <EditOutlined />
-                      </IconButton>
-                      <IconButton color="error" onClick={() => handleOpenDelModal(row.id)}>
-                        <DeleteOutlined />
-                      </IconButton>
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              )
-            })}
+            {loading ? (
+              <>
+                {[...Array(10)].map((_, index) => (
+                  <TableRow hover tabIndex={-1} key={index}>
+                    <TableCell component="th" id={index} scope="row" padding="none" width={240}>
+                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    </TableCell>
+                    <TableCell width={200}>
+                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    </TableCell>
+                    <TableCell align="center" width={250}>
+                      <Stack spacing={1} direction="row" justifyContent="center">
+                        <IconButton color="primary" disabled>
+                          <EditOutlined />
+                        </IconButton>
+                        <IconButton color="error" disabled>
+                          <DeleteOutlined />
+                        </IconButton>
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </>
+            ) : (
+              <>
+                {rows.map((row, index) => {
+                  const labelId = `genre-table-checkbox-${index}`
+                  return (
+                    <TableRow hover tabIndex={-1} key={labelId} sx={{ cursor: 'pointer' }}>
+                      <TableCell component="th" id={labelId} scope="row" padding="none" width={240}>
+                        {row.name}
+                      </TableCell>
+                      <TableCell>{row.description}</TableCell>
+                      <TableCell width={200}>{row.createdDate}</TableCell>
+                      <TableCell align="center" width={250}>
+                        <Stack spacing={1} direction="row" justifyContent="center">
+                          <IconButton color="primary" onClick={() => handleOpenEditModal(row.id)}>
+                            <EditOutlined />
+                          </IconButton>
+                          <IconButton color="error" onClick={() => handleOpenDelModal(row.id)}>
+                            <DeleteOutlined />
+                          </IconButton>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

@@ -3,12 +3,15 @@ import useSWR, { mutate } from 'swr'
 import { fetchAll, fetchOne, createItem, updateItem, deleteItem } from 'api/apiClient'
 import { useAlert } from 'contexts/AlertContent'
 import { useApi } from 'customHooks/useApi'
+import { useURLParams } from 'customHooks/useURLParams'
 
 const endpoint = '/genres'
 
-export const useGenres = (pageSize = 10, currentPage = 1) => {
-  const { data, error, mutate } = useSWR([endpoint, pageSize, currentPage], () => fetchAll(endpoint, { pageSize, currentPage }))
-  return { data, error, mutate }
+export const useGenres = (pageSize = 10, currentPage = 1, q, sortBy, sortOrder = 'desc') => {
+  const { data, error, isLoading, mutate } = useSWR([endpoint, pageSize, currentPage, q, sortBy, sortOrder], () =>
+    fetchAll(endpoint, { pageSize, currentPage, q, sortBy, sortOrder }),
+  )
+  return { data, error, isLoading, mutate }
 }
 
 export const useGenre = (id) => {
@@ -23,7 +26,6 @@ export const useCreateGenre = () => {
   const createGenre = async (genre) => {
     try {
       const newGenre = await execute(genre)
-      mutate(endpoint)
       alert('Genre created successfully!', 'success')
       return newGenre
     } catch (error) {

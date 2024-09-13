@@ -14,15 +14,25 @@ import Box from '@mui/material/Box'
 import { DeleteFilled } from '@ant-design/icons'
 import { lighten } from '@mui/system'
 import { GENRES_API } from 'api/constants'
-import { useDeleteGenre } from 'apiHooks/useGenres'
+import { useDeleteGenre, useGenres } from 'apiHooks/useGenres'
+import { useURLParams } from 'customHooks/useURLParams'
 
 export default function DeleteModal(props) {
   const { open, handleClose } = props
+  const { getParam } = useURLParams()
+
+  const sort = getParam('sort', 'createdAt-desc')
+  const sortBy = sort ? sort.split('-')[0] : null
+  const sortOrder = sort ? sort.split('-')[1] : null
+
   const { deleteGenre, isLoading: isDeleting } = useDeleteGenre()
+  const { mutate: refetchGenres } = useGenres(getParam('pageSize', 10), getParam('currentPage', 1), getParam('q', null), sortBy, sortOrder)
+
   const id = open
 
   const onDeleteItem = async (id) => {
     await deleteGenre(id)
+    refetchGenres()
     handleClose()
   }
 
