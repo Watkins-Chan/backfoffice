@@ -6,9 +6,17 @@ export const apiClient = axios.create({
   baseURL: BASE_URL,
 });
 
-export const fetchAll = async (endpoint, { pageSize, currentPage }) => {
-  const response = await apiClient.get(`${endpoint}?pageSize=${pageSize}&currentPage=${currentPage}`);
-  const result = _get(response, 'data', null) 
+export const fetchAll = async (endpoint, { pageSize, currentPage, q, sortBy, sortOrder }) => {
+  const params = {
+    ...(pageSize && { pageSize }),
+    ...(currentPage && { currentPage }),
+    ...(q && { q }),
+    ...(sortBy && { sortBy }),
+    ...(sortOrder && { sortOrder }),
+  };
+  const queryString = Object.keys(params).length > 0 ? `?${new URLSearchParams(params).toString()}` : '';
+  const response = await apiClient.get(`${endpoint}${queryString}`);
+  const result = _get(response, 'data', null);
   return result;
 };
 
