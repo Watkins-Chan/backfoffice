@@ -73,6 +73,7 @@ const GenreModal = (props) => {
   const { createGenre, isLoading: isCreating } = useCreateGenre()
   const { updateGenre, isLoading: isUpdating } = useUpdateGenre()
   const { data: genre } = useGenre(id)
+
   const { mutate: refetchGenres } = useGenres(getParam('pageSize', 10), getParam('currentPage', 1), getParam('q', null), sortBy, sortOrder)
 
   const {

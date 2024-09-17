@@ -1,5 +1,5 @@
 import React, { useState, useCallback, memo, useEffect } from 'react'
-
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import _get from 'lodash/get'
 
 import { SearchOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
@@ -29,12 +29,13 @@ import { useGenres, useUploadGenres } from 'apiHooks/useGenres'
 
 function Genres() {
   const theme = useTheme()
-  const { getParam, setParam } = useURLParams()
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const [row, setRow] = useState(() => getParam('pageSize', 10))
-  const [currentPage, setCurrentPage] = useState(() => getParam('currentPage', 1))
-  const [sort, setSort] = useState(() => getParam('sort', 'createdAt-desc'))
-  const [searchKeyword, setSearchKeyword] = useState(() => getParam('q', null))
+  const [row, setRow] = useState(() => Number(searchParams.get('pageSize')) || 10)
+  const [currentPage, setCurrentPage] = useState(() => Number(searchParams.get('currentPage')) || 1)
+  const [sort, setSort] = useState(() => searchParams.get('sort') || 'createdAt-desc')
+  const [searchKeyword, setSearchKeyword] = useState(() => searchParams.get('q') || '')
   const [inputValue, setInputValue] = useState(searchKeyword)
 
   const [openModal, setOpenModal] = useState(false)
@@ -56,25 +57,14 @@ function Genres() {
     }
   }
 
-  const updateParams = useCallback((newParams) => {
-    const urlParams = new URLSearchParams(window.location.search)
-
-    Object.entries(newParams).forEach(([key, value]) => {
-      urlParams.set(key, value)
-    })
-
-    const newURL = `${window.location.pathname}?${urlParams.toString()}`
-    window.history.replaceState(null, '', newURL)
-  }, [])
-
   const handleChangeSort = useCallback(
     (event) => {
       const value = event.target.value
       setSort(value)
-      setParam('sort', value)
       setCurrentPage(1)
+      setSearchParams({ ...Object.fromEntries(searchParams), sort: value, currentPage: 1 })
     },
-    [setParam],
+    [searchParams, setSearchParams],
   )
 
   const handleChangeRow = useCallback(
@@ -82,28 +72,28 @@ function Genres() {
       const newPageSize = event.target.value
       setRow(newPageSize)
       setCurrentPage(1)
-      updateParams({ pageSize: newPageSize, currentPage: 1 })
+      setSearchParams({ ...Object.fromEntries(searchParams), pageSize: newPageSize, currentPage: 1 })
     },
-    [updateParams],
+    [searchParams, setSearchParams],
   )
 
   const handleChangePage = useCallback(
     (event, value) => {
       setCurrentPage(value)
-      updateParams({ currentPage: value })
+      setSearchParams({ ...Object.fromEntries(searchParams), currentPage: value })
     },
-    [updateParams],
+    [searchParams, setSearchParams],
   )
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value)
   }
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     setSearchKeyword(inputValue.trim())
-    setParam('q', inputValue.trim())
     setCurrentPage(1)
-  }
+    setSearchParams({ ...Object.fromEntries(searchParams), q: inputValue.trim(), currentPage: 1 })
+  }, [inputValue, searchParams, setSearchParams])
 
   return (
     <React.Fragment>
