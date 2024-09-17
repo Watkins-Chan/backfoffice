@@ -1,6 +1,6 @@
 // useGenres.js
 import useSWR, { mutate } from 'swr'
-import { fetchAll, fetchOne, createItem, updateItem, deleteItem } from 'api/apiClient'
+import { fetchAll, fetchOne, createItem, updateItem, deleteItem, uploadFile } from 'api/apiClient'
 import { useAlert } from 'contexts/AlertContent'
 import { useApi } from 'customHooks/useApi'
 import { useURLParams } from 'customHooks/useURLParams'
@@ -73,4 +73,22 @@ export const useDeleteGenre = () => {
   }
 
   return { deleteGenre, isLoading }
+}
+
+export const useUploadGenres = () => {
+  const { execute, isLoading } = useApi((file) => uploadFile(`${endpoint}/upload`, file))
+  const alert = useAlert()
+
+  const uploadGenres = async (file) => {
+    try {
+      const result = await execute(file)
+      alert('Genres uploaded successfully!', 'success')
+      return result
+    } catch (error) {
+      alert('Failed to upload genres.', 'error')
+      throw error
+    }
+  }
+
+  return { uploadGenres, isLoading }
 }

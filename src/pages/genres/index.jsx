@@ -25,7 +25,7 @@ import IconButton from '@mui/material/IconButton'
 import GenreTable from 'components/tables/GenreTable'
 import GenreModal from 'components/modals/GenreModal'
 import { useURLParams } from 'customHooks/useURLParams'
-import { useGenres } from 'apiHooks/useGenres'
+import { useGenres, useUploadGenres } from 'apiHooks/useGenres'
 
 function Genres() {
   const theme = useTheme()
@@ -42,10 +42,19 @@ function Genres() {
   const sortBy = sort ? sort.split('-')[0] : null
   const sortOrder = sort ? sort.split('-')[1] : null
 
-  const { data: genres, error, isLoading: isGettingGenres } = useGenres(row, currentPage, searchKeyword, sortBy, sortOrder)
+  const { data: genres, error, isLoading: isGettingGenres, mutate } = useGenres(row, currentPage, searchKeyword, sortBy, sortOrder)
+  const { uploadGenres, isLoading } = useUploadGenres()
 
   const handleClickOpenModal = useCallback(() => setOpenModal(true), [])
   const handleCloseModal = useCallback(() => setOpenModal(false), [])
+
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0]
+    if (file) {
+      await uploadGenres(file)
+      mutate()
+    }
+  }
 
   const updateParams = useCallback((newParams) => {
     const urlParams = new URLSearchParams(window.location.search)
@@ -133,7 +142,8 @@ function Genres() {
                   Add
                 </Button>
                 <Tooltip title="Upload file">
-                  <IconButton>
+                  <IconButton component="label">
+                    <input type="file" hidden onChange={handleFileUpload} accept=".xlsx" />
                     <UploadOutlined />
                   </IconButton>
                 </Tooltip>

@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { BASE_URL } from './constants';
 import _get from 'lodash/get'
+
 export const apiClient = axios.create({
   baseURL: BASE_URL,
 });
@@ -39,4 +40,17 @@ export const updateItem = async (endpoint, id, item) => {
 export const deleteItem = async (endpoint, id) => {
   const { data } = await apiClient.delete(`${endpoint}/${id}`);
   return data;
+};
+
+export const uploadFile = async (endpoint, file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await apiClient.post(endpoint, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return response.data;
 };
