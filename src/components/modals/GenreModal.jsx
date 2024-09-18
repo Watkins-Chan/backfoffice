@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import { useSearchParams } from 'react-router-dom'
 
 import _get from 'lodash/get'
 import _isEmpty from 'lodash/isEmpty'
@@ -21,7 +22,6 @@ import Stack from '@mui/material/Stack'
 
 import { CloseOutlined, SaveOutlined } from '@ant-design/icons'
 import { useCreateGenre, useUpdateGenre, useGenre, useGenres } from 'apiHooks/useGenres'
-import { useURLParams } from 'customHooks/useURLParams'
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -63,18 +63,20 @@ const schema = yup.object({
 })
 
 const GenreModal = (props) => {
-  const { open, handleClose } = props
-  const { getParam } = useURLParams()
+  const { open, handleClose, refetchGenres } = props
+  const [searchParams, setSearchParams] = useSearchParams()
   const id = typeof open === 'string' && open
-  const sort = getParam('sort', 'createdAt-desc')
+
+  const sort = searchParams.get('sort') || 'createdAt-desc'
   const sortBy = sort ? sort.split('-')[0] : null
   const sortOrder = sort ? sort.split('-')[1] : null
+  const currentPage = Number(searchParams.get('currentPage')) || 1
+  const pageSize = Number(searchParams.get('pageSize')) || 10
+  const keyword = searchParams.get('q') || ''
 
   const { createGenre, isLoading: isCreating } = useCreateGenre()
   const { updateGenre, isLoading: isUpdating } = useUpdateGenre()
   const { data: genre } = useGenre(id)
-
-  const { mutate: refetchGenres } = useGenres(getParam('pageSize', 10), getParam('currentPage', 1), getParam('q', null), sortBy, sortOrder)
 
   const {
     control,
@@ -92,7 +94,7 @@ const GenreModal = (props) => {
   const onSubmit = async (data) => {
     const switchApi = id ? updateGenre(id, data) : createGenre(data)
     await switchApi
-    await refetchGenres()
+    refetchGenres()
     handleClose()
     onReset()
   }
@@ -102,6 +104,12 @@ const GenreModal = (props) => {
       reset({ genre_name: _get(genre, 'genre_name', ''), description: _get(genre, 'description', '') })
     }
   }, [genre])
+
+  useEffect(() => {
+    if (id) {
+      console.log('refetchGenres in GenreModal:', refetchGenres)
+    }
+  }, [id, refetchGenres])
 
   return (
     <BootstrapDialog maxWidth="sm" fullWidth scroll="body" onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>

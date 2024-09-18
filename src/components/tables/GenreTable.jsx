@@ -120,7 +120,7 @@ GenreTableHead.propTypes = {
 }
 
 function GenreTable(props) {
-  const { genres, loading } = props
+  const { genres, loading, refetchGenres } = props
   const [order, setOrder] = React.useState('asc')
   const [orderBy, setOrderBy] = React.useState('name')
   const [openDelModal, setDelModal] = React.useState(null)
@@ -212,8 +212,8 @@ function GenreTable(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      {openDelModal && <DeleteModal handleClose={handleCloseDelModal} open={openDelModal} />}
-      {openEditModal && <GenreModal open={openEditModal} handleClose={handleCloseEditModal} />}
+      {openDelModal && <DeleteModal handleClose={handleCloseDelModal} open={openDelModal} refetchGenres={refetchGenres} />}
+      {openEditModal && <GenreModal open={openEditModal} handleClose={handleCloseEditModal} refetchGenres={refetchGenres} />}
     </>
   )
 }
