@@ -62,7 +62,7 @@ const schema = yup.object({
   description: yup.string(),
 })
 
-const GenreModal = (props) => {
+const UpsertGenreModal = (props) => {
   const { open, handleClose, refetchGenres } = props
   const [searchParams, setSearchParams] = useSearchParams()
   const id = typeof open === 'string' && open
@@ -104,12 +104,6 @@ const GenreModal = (props) => {
       reset({ genre_name: _get(genre, 'genre_name', ''), description: _get(genre, 'description', '') })
     }
   }, [genre])
-
-  useEffect(() => {
-    if (id) {
-      console.log('refetchGenres in GenreModal:', refetchGenres)
-    }
-  }, [id, refetchGenres])
 
   return (
     <BootstrapDialog maxWidth="sm" fullWidth scroll="body" onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
@@ -179,4 +173,4 @@ const GenreModal = (props) => {
   )
 }
 
-export default GenreModal
+export default UpsertGenreModal

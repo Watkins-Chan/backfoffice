@@ -18,7 +18,7 @@ import Skeleton from '@mui/material/Skeleton'
 import { visuallyHidden } from '@mui/utils'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import DeleteModal from 'components/modals/DeleteModal'
-import GenreModal from 'components/modals/GenreModal'
+import UpsertGenreModal from 'components/modals/UpsertGenreModal'
 
 function createData(id, name, description, createdDate) {
   return {
@@ -213,7 +213,7 @@ function GenreTable(props) {
         </Table>
       </TableContainer>
       {openDelModal && <DeleteModal handleClose={handleCloseDelModal} open={openDelModal} refetchGenres={refetchGenres} />}
-      {openEditModal && <GenreModal open={openEditModal} handleClose={handleCloseEditModal} refetchGenres={refetchGenres} />}
+      {openEditModal && <UpsertGenreModal open={openEditModal} handleClose={handleCloseEditModal} refetchGenres={refetchGenres} />}
     </>
   )
 }

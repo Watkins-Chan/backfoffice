@@ -14,7 +14,7 @@ import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 
 import GenreTable from 'components/tables/GenreTable'
-import GenreModal from 'components/modals/GenreModal'
+import UpsertGenreModal from 'components/modals/UpsertGenreModal'
 import { useDeleteAllGenre, useGenres, useUploadGenres } from 'apiHooks/useGenres'
 import SearchBar from 'components/Genres/SearchBar'
 import SortOptions from 'components/Genres/SortOptions'
@@ -22,6 +22,7 @@ import FileUploadButton from 'components/Genres/FileUploadButton'
 import RowPerPageSelector from 'components/Genres/RowPerPageSelector '
 import PaginationControl from 'components/Genres/PaginationControl'
 import RemoveAllButton from 'components/Genres/RemoveAllButton'
+import DeleteAllModal from 'components/modals/DeleteAllModal'
 
 function Genres() {
   const theme = useTheme()
@@ -34,6 +35,7 @@ function Genres() {
   const [inputValue, setInputValue] = useState(searchKeyword)
 
   const [openModal, setOpenModal] = useState(false)
+  const [openDeleteAllModal, setOpenDeleteAllModal] = useState(false)
 
   const sortBy = useMemo(() => sort.split('-')[0], [sort])
   const sortOrder = useMemo(() => sort.split('-')[1], [sort])
@@ -44,6 +46,8 @@ function Genres() {
 
   const handleClickOpenModal = useCallback(() => setOpenModal(true), [])
   const handleCloseModal = useCallback(() => setOpenModal(false), [])
+  const handleClickOpenDeleteAllModal = useCallback(() => setOpenDeleteAllModal(true), [])
+  const handleCloseDeleteAllModal = useCallback(() => setOpenDeleteAllModal(false), [])
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0]
@@ -100,11 +104,6 @@ function Genres() {
     updateParams({ q: inputValue.trim(), currentPage: 1 })
   }, [inputValue, searchParams, updateParams])
 
-  const handleDeleteAll = useCallback(() => {
-    deleteAllGenre()
-    refetchGenres()
-  }, [])
-
   return (
     <React.Fragment>
       <Card variant="outlined">
@@ -120,7 +119,7 @@ function Genres() {
                   Add
                 </Button>
                 <FileUploadButton onFileUpload={handleFileUpload} />
-                <RemoveAllButton onDeleteAll={handleDeleteAll} />
+                <RemoveAllButton onOpenDeleteAllModal={handleClickOpenDeleteAllModal} />
               </Stack>
             </Grid>
           </Grid>
@@ -138,7 +137,8 @@ function Genres() {
           </Grid>
         </Box>
       </Card>
-      {openModal && <GenreModal open={openModal} handleClose={handleCloseModal} refetchGenres={refetchGenres} />}
+      {openModal && <UpsertGenreModal open={openModal} handleClose={handleCloseModal} refetchGenres={refetchGenres} />}
+      {openDeleteAllModal && <DeleteAllModal open={openDeleteAllModal} handleClose={handleCloseDeleteAllModal} refetchGenres={refetchGenres} />}
     </React.Fragment>
   )
 }

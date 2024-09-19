@@ -2,9 +2,9 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import { DeleteOutlined } from '@ant-design/icons'
 
-const RemoveAllButton = ({ onDeleteAll }) => (
+const RemoveAllButton = ({ onOpenDeleteAllModal }) => (
   <Tooltip title="Delete All">
-    <IconButton color="error" onClick={onDeleteAll}>
+    <IconButton color="error" onClick={onOpenDeleteAllModal}>
       <DeleteOutlined />
     </IconButton>
   </Tooltip>
