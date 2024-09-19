@@ -41,7 +41,7 @@ function Genres() {
   const sortOrder = useMemo(() => sort.split('-')[1], [sort])
 
   const { data: genres, error, isLoading: isGettingGenres, mutate: refetchGenres } = useGenres(row, currentPage, searchKeyword, sortBy, sortOrder)
-  const { uploadGenres } = useUploadGenres()
+  const { uploadGenres, isLoading: isUploading } = useUploadGenres()
   const { deleteAllGenre } = useDeleteAllGenre()
 
   const handleClickOpenModal = useCallback(() => setOpenModal(true), [])
@@ -118,8 +118,8 @@ function Genres() {
                 <Button sx={{ marginX: 2 }} variant="contained" startIcon={<PlusOutlined />} onClick={handleClickOpenModal}>
                   Add
                 </Button>
-                <FileUploadButton onFileUpload={handleFileUpload} />
-                <RemoveAllButton onOpenDeleteAllModal={handleClickOpenDeleteAllModal} />
+                <FileUploadButton onFileUpload={handleFileUpload} isLoading={isUploading} />
+                <RemoveAllButton onOpenDeleteAllModal={handleClickOpenDeleteAllModal} disabled={_get(genres, 'data', []).length === 0} />
               </Stack>
             </Grid>
           </Grid>

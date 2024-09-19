@@ -18,7 +18,7 @@ export default function DeleteModal(props) {
 
   const onDeleteItem = async (id) => {
     await deleteGenre(id)
-    await refetchGenres()
+    refetchGenres()
     handleClose()
   }
 
