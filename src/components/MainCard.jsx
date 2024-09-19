@@ -1,39 +1,23 @@
-import PropTypes from 'prop-types';
-import { forwardRef } from 'react';
+import PropTypes from 'prop-types'
+import { forwardRef } from 'react'
 
 // material-ui
-import { useTheme } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardHeader from '@mui/material/CardHeader'
+import Divider from '@mui/material/Divider'
+import Typography from '@mui/material/Typography'
 
 // header style
 const headerSX = {
   p: 2.5,
-  '& .MuiCardHeader-action': { m: '0px auto', alignSelf: 'center' }
-};
+  '& .MuiCardHeader-action': { m: '0px auto', alignSelf: 'center' },
+}
 
-function MainCard(
-  {
-    border = true,
-    boxShadow,
-    children,
-    content = true,
-    contentSX = {},
-    darkTitle,
-    elevation,
-    secondary,
-    shadow,
-    sx = {},
-    title,
-    ...others
-  },
-  ref
-) {
-  const theme = useTheme();
-  boxShadow = theme.palette.mode === 'dark' ? boxShadow || true : boxShadow;
+function MainCard({ border = true, boxShadow, children, content = true, contentSX = {}, darkTitle, elevation, secondary, shadow, sx = {}, title, ...others }, ref) {
+  const theme = useTheme()
+  boxShadow = theme.palette.mode === 'dark' ? boxShadow || true : boxShadow
 
   return (
     <Card
@@ -46,15 +30,15 @@ function MainCard(
         borderColor: theme.palette.mode === 'dark' ? theme.palette.divider : theme.palette.grey.A800,
         boxShadow: boxShadow && (!border || theme.palette.mode === 'dark') ? shadow || theme.customShadows.z1 : 'inherit',
         ':hover': {
-          boxShadow: boxShadow ? shadow || theme.customShadows.z1 : 'inherit'
+          boxShadow: boxShadow ? shadow || theme.customShadows.z1 : 'inherit',
         },
         '& pre': {
           m: 0,
           p: '16px !important',
           fontFamily: theme.typography.fontFamily,
-          fontSize: '0.75rem'
+          fontSize: '0.75rem',
         },
-        ...sx
+        ...sx,
       }}
     >
       {/* card header and action */}
@@ -65,10 +49,10 @@ function MainCard(
       {content && <CardContent sx={contentSX}>{children}</CardContent>}
       {!content && children}
     </Card>
-  );
+  )
 }
 
-export default forwardRef(MainCard);
+export default forwardRef(MainCard)
 
 MainCard.propTypes = {
   border: PropTypes.bool,
@@ -85,5 +69,5 @@ MainCard.propTypes = {
   sx: PropTypes.object,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   modal: PropTypes.bool,
-  others: PropTypes.any
-};
+  others: PropTypes.any,
+}

@@ -42,6 +42,11 @@ export const deleteItem = async (endpoint, id) => {
   return data;
 };
 
+export const deleteAllItem = async (endpoint) => {
+  const { data } = await apiClient.delete(endpoint);
+  return data;
+};
+
 export const uploadFile = async (endpoint, file) => {
   const formData = new FormData();
   formData.append('file', file);

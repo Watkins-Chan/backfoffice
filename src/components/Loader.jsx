@@ -1,6 +1,6 @@
 // material-ui
-import { styled } from '@mui/material/styles';
-import LinearProgress from '@mui/material/LinearProgress';
+import { styled } from '@mui/material/styles'
+import LinearProgress from '@mui/material/LinearProgress'
 
 // loader style
 const LoaderWrapper = styled('div')(({ theme }) => ({
@@ -10,16 +10,14 @@ const LoaderWrapper = styled('div')(({ theme }) => ({
   zIndex: 2001,
   width: '100%',
   '& > * + *': {
-    marginTop: theme.spacing(2)
-  }
-}));
-
-// ==============================|| Loader ||============================== //
+    marginTop: theme.spacing(2),
+  },
+}))
 
 const Loader = () => (
   <LoaderWrapper>
     <LinearProgress color="primary" />
   </LoaderWrapper>
-);
+)
 
-export default Loader;
+export default Loader

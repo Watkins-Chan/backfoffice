@@ -4,7 +4,7 @@ import { DeleteOutlined } from '@ant-design/icons'
 
 const RemoveAllButton = ({ onDeleteAll }) => (
   <Tooltip title="Delete All">
-    <IconButton color="error">
+    <IconButton color="error" onClick={onDeleteAll}>
       <DeleteOutlined />
     </IconButton>
   </Tooltip>

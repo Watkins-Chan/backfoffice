@@ -1,6 +1,6 @@
 // useGenres.js
 import useSWR, { mutate } from 'swr'
-import { fetchAll, fetchOne, createItem, updateItem, deleteItem, uploadFile } from 'api/apiClient'
+import { fetchAll, fetchOne, createItem, updateItem, deleteItem, uploadFile, deleteAllItem } from 'api/apiClient'
 import { useAlert } from 'contexts/AlertContent'
 import { useApi } from 'customHooks/useApi'
 import { useURLParams } from 'customHooks/useURLParams'
@@ -73,6 +73,25 @@ export const useDeleteGenre = () => {
   }
 
   return { deleteGenre, isLoading }
+}
+
+export const useDeleteAllGenre = () => {
+  const { execute, isLoading } = useApi((id) => deleteAllItem(endpoint))
+  const alert = useAlert()
+
+  const deleteAllGenre = async (id) => {
+    try {
+      const deleted = await execute(id)
+      mutate(endpoint)
+      alert('Genres deleted successfully!', 'success')
+      return deleted
+    } catch (error) {
+      alert('Failed to delete genres.', 'error')
+      throw error
+    }
+  }
+
+  return { deleteAllGenre, isLoading }
 }
 
 export const useUploadGenres = () => {

@@ -15,7 +15,7 @@ import Divider from '@mui/material/Divider'
 
 import GenreTable from 'components/tables/GenreTable'
 import GenreModal from 'components/modals/GenreModal'
-import { useGenres, useUploadGenres } from 'apiHooks/useGenres'
+import { useDeleteAllGenre, useGenres, useUploadGenres } from 'apiHooks/useGenres'
 import SearchBar from 'components/Genres/SearchBar'
 import SortOptions from 'components/Genres/SortOptions'
 import FileUploadButton from 'components/Genres/FileUploadButton'
@@ -40,6 +40,7 @@ function Genres() {
 
   const { data: genres, error, isLoading: isGettingGenres, mutate: refetchGenres } = useGenres(row, currentPage, searchKeyword, sortBy, sortOrder)
   const { uploadGenres } = useUploadGenres()
+  const { deleteAllGenre } = useDeleteAllGenre()
 
   const handleClickOpenModal = useCallback(() => setOpenModal(true), [])
   const handleCloseModal = useCallback(() => setOpenModal(false), [])
@@ -99,6 +100,11 @@ function Genres() {
     updateParams({ q: inputValue.trim(), currentPage: 1 })
   }, [inputValue, searchParams, updateParams])
 
+  const handleDeleteAll = useCallback(() => {
+    deleteAllGenre()
+    refetchGenres()
+  }, [])
+
   return (
     <React.Fragment>
       <Card variant="outlined">
@@ -114,7 +120,7 @@ function Genres() {
                   Add
                 </Button>
                 <FileUploadButton onFileUpload={handleFileUpload} />
-                <RemoveAllButton />
+                <RemoveAllButton onDeleteAll={handleDeleteAll} />
               </Stack>
             </Grid>
           </Grid>
