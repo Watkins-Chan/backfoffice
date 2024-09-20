@@ -7,9 +7,7 @@ import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
-import { PlusOutlined } from '@ant-design/icons'
 
 import GenreTable from 'components/genres/GenreTable'
 import UpsertGenreModal from 'components/genres/UpsertGenreModal'
@@ -20,6 +18,7 @@ import PaginationControl from 'components/common/PaginationControl'
 import RemoveAllButton from 'components/common/RemoveAllButton'
 import RowPerPageSelector from 'components/common/RowPerPageSelector '
 import DeleteAllModal from 'components/modals/DeleteAllModal'
+import AddNewButton from 'components/common/AddNewButton'
 import { useDeleteAllGenre, useGenres, useUploadGenres } from 'hooks/genres/useGenres'
 
 const Genres = () => {
@@ -111,11 +110,9 @@ const Genres = () => {
               <SearchBar inputValue={inputValue} onChange={handleInputChange} onSearch={handleSearch} />
             </Grid>
             <Grid item xs={12} md="auto">
-              <Stack direction="row" alignItems="center">
+              <Stack direction="row" alignItems="center" spacing={1}>
                 <SortOptions sort={sort} onChange={handleChangeSort} />
-                <Button sx={{ marginX: 1 }} variant="contained" startIcon={<PlusOutlined />} onClick={handleClickOpenModal}>
-                  Add
-                </Button>
+                <AddNewButton onClick={handleClickOpenModal} />
                 <FileUploadButton onFileUpload={handleFileUpload} isLoading={isUploading} />
                 <RemoveAllButton onOpenDeleteAllModal={handleClickOpenDeleteAllModal} disabled={_get(genres, 'data', []).length === 0} />
               </Stack>

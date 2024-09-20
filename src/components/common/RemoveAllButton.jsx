@@ -4,9 +4,11 @@ import { DeleteOutlined } from '@ant-design/icons'
 
 const RemoveAllButton = ({ onOpenDeleteAllModal, disabled }) => (
   <Tooltip title="Delete All">
-    <IconButton color="error" onClick={onOpenDeleteAllModal} disabled={disabled}>
-      <DeleteOutlined />
-    </IconButton>
+    <span>
+      <IconButton color="error" onClick={onOpenDeleteAllModal} disabled={disabled}>
+        <DeleteOutlined />
+      </IconButton>
+    </span>
   </Tooltip>
 )
 

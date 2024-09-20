@@ -5,10 +5,12 @@ import { UploadOutlined } from '@ant-design/icons'
 
 const FileUploadButton = ({ onFileUpload, isLoading }) => (
   <Tooltip title="Import data">
-    <IconButton component="label">
-      <input type="file" hidden onChange={onFileUpload} accept=".xlsx" />
-      {isLoading ? <CircularProgress size={20} /> : <UploadOutlined />}
-    </IconButton>
+    <span>
+      <IconButton component="label">
+        <input type="file" hidden onChange={onFileUpload} accept=".xlsx" />
+        {isLoading ? <CircularProgress size={20} /> : <UploadOutlined />}
+      </IconButton>
+    </span>
   </Tooltip>
 )
 
