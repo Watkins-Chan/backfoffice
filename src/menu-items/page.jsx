@@ -1,13 +1,9 @@
-// assets
 import { AppstoreOutlined, UnorderedListOutlined } from '@ant-design/icons'
 
-// icons
 const icons = {
   AppstoreOutlined,
   UnorderedListOutlined,
 }
-
-// ==============================|| MENU ITEMS - EXTRA PAGES ||============================== //
 
 const pages = {
   id: 'page',

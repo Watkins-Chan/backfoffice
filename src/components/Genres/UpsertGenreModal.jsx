@@ -21,7 +21,7 @@ import FormControl from '@mui/material/FormControl'
 import Stack from '@mui/material/Stack'
 
 import { CloseOutlined, SaveOutlined } from '@ant-design/icons'
-import { useCreateGenre, useUpdateGenre, useGenre, useGenres } from 'apiHooks/useGenres'
+import { useCreateGenre, useUpdateGenre, useGenre, useGenres } from 'hooks/genres/useGenres'
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {

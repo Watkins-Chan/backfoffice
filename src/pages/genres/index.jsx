@@ -20,7 +20,7 @@ import PaginationControl from 'components/common/PaginationControl'
 import RemoveAllButton from 'components/common/RemoveAllButton'
 import RowPerPageSelector from 'components/common/RowPerPageSelector '
 import DeleteAllModal from 'components/modals/DeleteAllModal'
-import { useDeleteAllGenre, useGenres, useUploadGenres } from 'apiHooks/useGenres'
+import { useDeleteAllGenre, useGenres, useUploadGenres } from 'hooks/genres/useGenres'
 
 function Genres() {
   const theme = useTheme()
