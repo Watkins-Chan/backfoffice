@@ -18,7 +18,7 @@ import Skeleton from '@mui/material/Skeleton'
 import { visuallyHidden } from '@mui/utils'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import DeleteModal from 'components/modals/DeleteModal'
-import UpsertGenreModal from 'components/modals/UpsertGenreModal'
+import UpsertGenreModal from 'components/genres/UpsertGenreModal'
 
 function createData(id, name, description, createdDate) {
   return {
