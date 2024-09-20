@@ -16,7 +16,7 @@ const SearchBar = ({ inputValue, onChange, onSearch }) => {
           startAdornment: <SearchOutlined />,
         }}
       />
-      <Button sx={{ marginLeft: 2 }} variant="contained" onClick={onSearch}>
+      <Button sx={{ marginLeft: 1 }} variant="contained" onClick={onSearch}>
         Search
       </Button>
     </Box>

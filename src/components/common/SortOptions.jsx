@@ -3,16 +3,28 @@ import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
-const SortOptions = ({ sort, onChange }) => (
-  <FormControl fullWidth sx={{ width: 200 }}>
-    <InputLabel>Sort by</InputLabel>
-    <Select label="Sort by" value={sort} onChange={onChange}>
-      <MenuItem value="name-asc">A-Z</MenuItem>
-      <MenuItem value="name-desc">Z-A</MenuItem>
-      <MenuItem value="createdAt-desc">Newest</MenuItem>
-      <MenuItem value="createdAt-asc">Oldest</MenuItem>
-    </Select>
-  </FormControl>
-)
+import _map from 'lodash/map'
+import _get from 'lodash/get'
+
+const SortOptions = ({ sort, onChange }) => {
+  const sortData = [
+    { name: 'A-Z', value: 'name-asc' },
+    { name: 'Z-A', value: 'name-desc' },
+    { name: 'Newest', value: 'createdAt-desc' },
+    { name: 'Oldest', value: 'createdAt-asc' },
+  ]
+  return (
+    <FormControl fullWidth sx={{ width: 200 }}>
+      <InputLabel>Sort by</InputLabel>
+      <Select label="Sort by" value={sort} onChange={onChange}>
+        {_map(sortData, (item) => (
+          <MenuItem key={_get(item, 'value', '')} value={_get(item, 'value', '')}>
+            {_get(item, 'name', '')}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  )
+}
 
 export default SortOptions
