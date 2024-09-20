@@ -1,5 +1,7 @@
 import React, { memo } from 'react'
 
+import _map from 'lodash/map'
+
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Grid from '@mui/material/Grid'
@@ -8,6 +10,7 @@ import TextField from '@mui/material/TextField'
 import SearchBar from 'components/common/SearchBar'
 import SortOptions from 'components/common/SortOptions'
 import AddNewButton from 'components/common/AddNewButton'
+import CardInfo from 'components/authors/CardInfo'
 
 const Authors = () => {
   return (
@@ -26,7 +29,15 @@ const Authors = () => {
             </Grid>
           </Grid>
         </Box>
-        <Box>2</Box>
+        <Box>
+          <Grid container spacing={2}>
+            {_map([...Array(20)], (_, index) => (
+              <Grid key={index} item xs={12} sm={6} md={4}>
+                <CardInfo />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
         <Box>3</Box>
       </Stack>
     </React.Fragment>
