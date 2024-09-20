@@ -2,27 +2,25 @@ import React, { useState, useCallback, memo, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import _get from 'lodash/get'
 
-import { PlusOutlined } from '@ant-design/icons'
-
 import { useTheme } from '@mui/material/styles'
-
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
+import { PlusOutlined } from '@ant-design/icons'
 
 import GenreTable from 'components/tables/GenreTable'
 import UpsertGenreModal from 'components/modals/UpsertGenreModal'
-import { useDeleteAllGenre, useGenres, useUploadGenres } from 'apiHooks/useGenres'
-import SearchBar from 'components/Genres/SearchBar'
-import SortOptions from 'components/Genres/SortOptions'
-import FileUploadButton from 'components/Genres/FileUploadButton'
-import RowPerPageSelector from 'components/Genres/RowPerPageSelector '
-import PaginationControl from 'components/Genres/PaginationControl'
-import RemoveAllButton from 'components/Genres/RemoveAllButton'
+import SearchBar from 'components/genres/SearchBar'
+import SortOptions from 'components/common/SortOptions'
+import FileUploadButton from 'components/common/FileUploadButton'
+import PaginationControl from 'components/common/PaginationControl'
+import RemoveAllButton from 'components/common/RemoveAllButton'
+import RowPerPageSelector from 'components/common/RowPerPageSelector '
 import DeleteAllModal from 'components/modals/DeleteAllModal'
+import { useDeleteAllGenre, useGenres, useUploadGenres } from 'apiHooks/useGenres'
 
 function Genres() {
   const theme = useTheme()

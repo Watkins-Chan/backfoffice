@@ -4,7 +4,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { UploadOutlined } from '@ant-design/icons'
 
 const FileUploadButton = ({ onFileUpload, isLoading }) => (
-  <Tooltip title="Upload file">
+  <Tooltip title="Import data">
     <IconButton component="label">
       <input type="file" hidden onChange={onFileUpload} accept=".xlsx" />
       {isLoading ? <CircularProgress size={20} /> : <UploadOutlined />}
