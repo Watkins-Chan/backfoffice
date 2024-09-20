@@ -13,7 +13,7 @@ import { PlusOutlined } from '@ant-design/icons'
 
 import GenreTable from 'components/genres/GenreTable'
 import UpsertGenreModal from 'components/genres/UpsertGenreModal'
-import SearchBar from 'components/genres/SearchBar'
+import SearchBar from 'components/common/SearchBar'
 import SortOptions from 'components/common/SortOptions'
 import FileUploadButton from 'components/common/FileUploadButton'
 import PaginationControl from 'components/common/PaginationControl'
@@ -113,7 +113,7 @@ const Genres = () => {
             <Grid item xs={12} md="auto">
               <Stack direction="row" alignItems="center">
                 <SortOptions sort={sort} onChange={handleChangeSort} />
-                <Button sx={{ marginX: 2 }} variant="contained" startIcon={<PlusOutlined />} onClick={handleClickOpenModal}>
+                <Button sx={{ marginX: 1 }} variant="contained" startIcon={<PlusOutlined />} onClick={handleClickOpenModal}>
                   Add
                 </Button>
                 <FileUploadButton onFileUpload={handleFileUpload} isLoading={isUploading} />
