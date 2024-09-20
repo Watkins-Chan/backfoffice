@@ -1,14 +1,13 @@
 import React, { memo } from 'react'
 
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
-import { PlusOutlined } from '@ant-design/icons'
 
 import SearchBar from 'components/common/SearchBar'
 import SortOptions from 'components/common/SortOptions'
+import AddNewButton from 'components/common/AddNewButton'
 
 const Authors = () => {
   return (
@@ -20,11 +19,9 @@ const Authors = () => {
               <SearchBar />
             </Grid>
             <Grid item xs={12} md="auto">
-              <Stack direction="row" alignItems="center">
+              <Stack direction="row" alignItems="center" spacing={1}>
                 <SortOptions />
-                <Button sx={{ marginX: 1 }} variant="contained" startIcon={<PlusOutlined />}>
-                  Add
-                </Button>
+                <AddNewButton />
               </Stack>
             </Grid>
           </Grid>
