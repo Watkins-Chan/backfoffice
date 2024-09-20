@@ -1,4 +1,4 @@
-import AlertSnackbar from 'components/alerts/AlertSnackbar'
+import AlertSnackbar from 'components/common/AlertSnackbar'
 import React, { createContext, useContext, useState } from 'react'
 
 const AlertContext = createContext()
