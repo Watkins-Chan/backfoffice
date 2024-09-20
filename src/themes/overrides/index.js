@@ -5,6 +5,7 @@ import { merge } from 'lodash';
 import Badge from './Badge';
 import Button from './Button';
 import CardContent from './CardContent';
+import CardActions from './CardActions';
 import Checkbox from './Checkbox';
 import Chip from './Chip';
 import IconButton from './IconButton';
@@ -25,6 +26,7 @@ export default function ComponentsOverrides(theme) {
     Button(theme),
     Badge(theme),
     CardContent(),
+    CardActions(),
     Checkbox(theme),
     Chip(theme),
     IconButton(theme),
