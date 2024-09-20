@@ -3,7 +3,6 @@ import useSWR, { mutate } from 'swr'
 import { fetchAll, fetchOne, createItem, updateItem, deleteItem, uploadFile, deleteAllItem } from 'api/apiClient'
 import { useAlert } from 'contexts/AlertContent'
 import { useApi } from 'customHooks/useApi'
-import { useURLParams } from 'customHooks/useURLParams'
 
 const endpoint = '/genres'
 
