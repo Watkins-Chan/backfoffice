@@ -1,8 +1,9 @@
-import { AppstoreOutlined, UnorderedListOutlined } from '@ant-design/icons'
+import { AppstoreOutlined, UnorderedListOutlined, TeamOutlined } from '@ant-design/icons'
 
 const icons = {
   AppstoreOutlined,
   UnorderedListOutlined,
+  TeamOutlined,
 }
 
 const pages = {
@@ -16,6 +17,14 @@ const pages = {
       type: 'item',
       url: '/genres',
       icon: icons.AppstoreOutlined,
+      breadcrumbs: true,
+    },
+    {
+      id: 'authors',
+      title: 'Authors',
+      type: 'item',
+      url: '/authors',
+      icon: icons.TeamOutlined,
       breadcrumbs: true,
     },
     {

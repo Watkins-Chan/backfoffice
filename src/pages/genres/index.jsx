@@ -22,7 +22,7 @@ import RowPerPageSelector from 'components/common/RowPerPageSelector '
 import DeleteAllModal from 'components/modals/DeleteAllModal'
 import { useDeleteAllGenre, useGenres, useUploadGenres } from 'hooks/genres/useGenres'
 
-function Genres() {
+const Genres = () => {
   const theme = useTheme()
   const [searchParams, setSearchParams] = useSearchParams()
 
