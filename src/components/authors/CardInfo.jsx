@@ -24,11 +24,15 @@ import { Link } from 'react-router-dom'
 
 const CardInfo = () => {
   const theme = useTheme()
-  const contactInfo = [
-    { icon: <MailOutlined />, value: 'huy.mtruong+distributor+20092024@digicommercegroup.com' },
-    { icon: <PhoneOutlined />, value: '+1 (687) 252-5573' },
-    { icon: <EnvironmentOutlined />, value: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry' },
-  ]
+
+  const itemStyle = ({ lineClamp = 3, wordBreak = 'break-all' }) => ({
+    display: '-webkit-box',
+    overflow: 'hidden',
+    WebkitBoxOrient: 'vertical',
+    ...(lineClamp && { WebkitLineClamp: lineClamp }),
+    ...(wordBreak && { wordBreak: wordBreak }),
+  })
+
   return (
     <Card variant="outlined" sx={{ height: '100%' }}>
       <CardHeader
@@ -47,36 +51,46 @@ const CardInfo = () => {
       />
       <Divider variant="middle" />
       <CardContent>
-        <Typography
-          paragraph
-          sx={{
-            display: '-webkit-box',
-            WebkitLineClamp: '3',
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-          }}
-        >
+        <Typography paragraph sx={itemStyle}>
           Hello, Loit nih zadul wokazu ta eno pigzuziz ruwulmid divkumas wehumjuv zu pew erasis gaba ofa fenucfo.
         </Typography>
         <List disablePadding>
-          {_map(contactInfo, (item, index) => (
-            <ListItem disableGutters disablePadding key={index}>
-              <ListItemIcon sx={{ color: theme.palette.common.black }}>{_get(item, 'icon')}</ListItemIcon>
-              <ListItemText
-                primaryTypographyProps={{
-                  color: theme.palette.grey[500],
-                  sx: {
-                    display: '-webkit-box',
-                    WebkitLineClamp: '1',
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                    wordBreak: 'break-all',
-                  },
-                }}
-                primary={_get(item, 'value', '')}
-              />
-            </ListItem>
-          ))}
+          <ListItem disableGutters disablePadding>
+            <ListItemIcon sx={{ color: theme.palette.common.black }}>
+              <MailOutlined />
+            </ListItemIcon>
+            <ListItemText
+              primaryTypographyProps={{
+                color: theme.palette.grey[500],
+                sx: itemStyle({ lineClamp: 1 }),
+              }}
+              primary="huy.mtruong+distributor+20092024@digicommercegroup.com"
+            />
+          </ListItem>
+          <ListItem disableGutters disablePadding>
+            <ListItemIcon sx={{ color: theme.palette.common.black }}>
+              <PhoneOutlined />
+            </ListItemIcon>
+            <ListItemText
+              primaryTypographyProps={{
+                color: theme.palette.grey[500],
+                sx: itemStyle({ lineClamp: 1 }),
+              }}
+              primary="+1 (687) 252-5573"
+            />
+          </ListItem>
+          <ListItem disableGutters disablePadding>
+            <ListItemIcon sx={{ color: theme.palette.common.black }}>
+              <EnvironmentOutlined />
+            </ListItemIcon>
+            <ListItemText
+              primaryTypographyProps={{
+                color: theme.palette.grey[500],
+                sx: itemStyle({ lineClamp: 1 }),
+              }}
+              primary="Lorem Ipsum is simply dummy text of the printing and typesetting industry"
+            />
+          </ListItem>
           <ListItem disableGutters disablePadding>
             <ListItemIcon sx={{ color: theme.palette.common.black }}>
               <LinkOutlined />
