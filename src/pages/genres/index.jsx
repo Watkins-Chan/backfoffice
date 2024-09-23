@@ -19,7 +19,7 @@ import RemoveAllButton from 'components/common/RemoveAllButton'
 import RowPerPageSelector from 'components/common/RowPerPageSelector '
 import DeleteAllModal from 'components/modals/DeleteAllModal'
 import AddNewButton from 'components/common/AddNewButton'
-import { useDeleteAllGenre, useGenres, useUploadGenres } from 'hooks/genres/useGenres'
+import { useGenres, useUploadGenres } from 'hooks/genres/useGenres'
 
 const Genres = () => {
   const theme = useTheme()
@@ -39,7 +39,6 @@ const Genres = () => {
 
   const { data: genres, error, isLoading: isGettingGenres, mutate: refetchGenres } = useGenres(row, currentPage, searchKeyword, sortBy, sortOrder)
   const { uploadGenres, isLoading: isUploading } = useUploadGenres()
-  const { deleteAllGenre } = useDeleteAllGenre()
 
   const handleClickOpenModal = useCallback(() => setOpenModal(true), [])
   const handleCloseModal = useCallback(() => setOpenModal(false), [])

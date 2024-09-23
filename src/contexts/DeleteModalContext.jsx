@@ -3,24 +3,24 @@ import { createContext, useContext, useState } from 'react'
 const DeleteModalContext = createContext()
 
 export const DeleteModalProvider = ({ children }) => {
-  const [open, setOpen] = useState(null)
+  const [openDeleteModal, setOpenDeleteModal] = useState(null)
   const [selectedId, setSelectedId] = useState(null)
 
-  const openModal = (id) => {
-    setOpen(true)
+  const handleOpenDeleteModal = (id) => {
+    setOpenDeleteModal(true)
     if (id) {
       setSelectedId(id)
     }
   }
 
-  const closeModal = () => {
-    setOpen(false)
+  const handleCloseDeleteModal = () => {
+    setOpenDeleteModal(false)
     if (selectedId) {
       setSelectedId(null)
     }
   }
 
-  return <DeleteModalContext.Provider value={{ open, selectedId, openModal, closeModal }}>{children}</DeleteModalContext.Provider>
+  return <DeleteModalContext.Provider value={{ openDeleteModal, selectedId, handleOpenDeleteModal, handleCloseDeleteModal }}>{children}</DeleteModalContext.Provider>
 }
 
 export const useHandleDeleteModal = () => {

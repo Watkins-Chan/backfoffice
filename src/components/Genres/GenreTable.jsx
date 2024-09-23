@@ -19,6 +19,8 @@ import { visuallyHidden } from '@mui/utils'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import DeleteModal from 'components/modals/DeleteModal'
 import UpsertGenreModal from 'components/genres/UpsertGenreModal'
+import { useHandleDeleteModal } from 'contexts/DeleteModalContext'
+import { useDeleteGenre } from 'hooks/genres/useGenres'
 
 function createData(id, name, description, createdDate) {
   return {
@@ -121,23 +123,18 @@ GenreTableHead.propTypes = {
 
 function GenreTable(props) {
   const { genres, loading, refetchGenres } = props
+  const { selectedId, openDeleteModal, handleOpenDeleteModal } = useHandleDeleteModal()
   const [order, setOrder] = React.useState('asc')
   const [orderBy, setOrderBy] = React.useState('name')
-  const [openDelModal, setDelModal] = React.useState(null)
   const [openEditModal, setEditModal] = React.useState(false)
+
+  const { deleteGenre, isLoading: isDeleting } = useDeleteGenre()
 
   const handleRequestSort = React.useCallback((event, property) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }, [])
-
-  const handleOpenDelModal = (id) => {
-    setDelModal(id)
-  }
-  const handleCloseDelModal = () => {
-    setDelModal(null)
-  }
 
   const handleOpenEditModal = (id) => {
     setEditModal(id ?? true)
@@ -196,10 +193,10 @@ function GenreTable(props) {
                       <TableCell width={200}>{row.createdDate}</TableCell>
                       <TableCell align="center" width={250}>
                         <Stack spacing={1} direction="row" justifyContent="center">
-                          <IconButton color="primary" onClick={() => handleOpenEditModal(row.id)}>
+                          <IconButton color="primary" onClick={() => handleOpenEditModal(_get(row, 'id', ''))}>
                             <EditOutlined />
                           </IconButton>
-                          <IconButton color="error" onClick={() => handleOpenDelModal(row.id)}>
+                          <IconButton color="error" onClick={() => handleOpenDeleteModal(_get(row, 'id', ''))}>
                             <DeleteOutlined />
                           </IconButton>
                         </Stack>
@@ -212,7 +209,7 @@ function GenreTable(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      {openDelModal && <DeleteModal handleClose={handleCloseDelModal} open={openDelModal} refetchGenres={refetchGenres} />}
+      {openDeleteModal && <DeleteModal refetchGenres={refetchGenres} handleDelete={() => deleteGenre(selectedId)} isDeleting={isDeleting} />}
       {openEditModal && <UpsertGenreModal open={openEditModal} handleClose={handleCloseEditModal} refetchGenres={refetchGenres} />}
     </>
   )
