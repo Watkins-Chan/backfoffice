@@ -10,14 +10,10 @@ import { lighten } from '@mui/system'
 import { useDeleteGenre } from 'hooks/genres/useGenres'
 
 export default function DeleteModal(props) {
-  const { open, handleClose, refetchGenres } = props
+  const { open, handleClose, isDeleting, handleDelete, refetchGenres } = props
 
-  const { deleteGenre, isLoading: isDeleting } = useDeleteGenre()
-
-  const id = open
-
-  const onDeleteItem = async (id) => {
-    await deleteGenre(id)
+  const onDeleteItem = async () => {
+    await handleDelete()
     refetchGenres()
     handleClose()
   }
@@ -30,15 +26,13 @@ export default function DeleteModal(props) {
             <DeleteFilled />
           </Avatar>
           <Typography variant="h4">Are you sure you want to delete?</Typography>
-          <Typography align="center">
-            By deleting "<b>{id}</b>" user, all task assigned to that user will also be deleted.
-          </Typography>
+          <Typography align="center">By deleting "sssss" user, all task assigned to that user will also be deleted.</Typography>
         </Stack>
         <Stack direction="row" spacing={2} mt={3.5}>
           <Button variant="outlined" color="inherit" fullWidth onClick={handleClose}>
             Cancel
           </Button>
-          <LoadingButton color="error" fullWidth loading={isDeleting} loadingPosition="start" variant="contained" onClick={() => onDeleteItem(id)}>
+          <LoadingButton color="error" fullWidth loading={isDeleting} loadingPosition="start" variant="contained" onClick={onDeleteItem}>
             Delete
           </LoadingButton>
         </Stack>

@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 
 import _map from 'lodash/map'
 
@@ -14,9 +14,13 @@ import PaginationControl from 'components/common/PaginationControl'
 import RowPerPageSelector from 'components/common/RowPerPageSelector '
 import MenuActions from 'components/authors/MenuActions'
 import { useMenuActions } from 'contexts/MenuActionsContext'
+import { useHandleDeleteModal } from 'contexts/DeleteModalContext'
+import DeleteModal from 'components/modals/DeleteModal'
 
 const Authors = () => {
   const { openPopover, closePopover } = useMenuActions()
+  const { open, openModal, closeModal } = useHandleDeleteModal()
+  const [selectedId, setSelectedId] = useState(null)
 
   const actions = [
     {
@@ -28,13 +32,13 @@ const Authors = () => {
     {
       name: 'Edit',
       func: () => {
-        console.log('Edit'), closePopover()
+        openModal(selectedId), closePopover()
       },
     },
     {
       name: 'Delete',
       func: () => {
-        console.log('Delete'), closePopover()
+        openModal(selectedId), closePopover()
       },
     },
   ]
@@ -59,7 +63,11 @@ const Authors = () => {
           <Grid container spacing={2}>
             {_map([...Array(20)], (_, index) => (
               <Grid key={index} item xs={12} sm={6} md={4}>
-                <CardInfo onOpenMenu={(event) => openPopover(event, index + 1)} />
+                <CardInfo
+                  onOpenMenu={(event) => {
+                    openPopover(event, index + 1), setSelectedId(index + 1)
+                  }}
+                />
               </Grid>
             ))}
           </Grid>
@@ -76,6 +84,7 @@ const Authors = () => {
         </Box>
       </Stack>
       <MenuActions actions={actions} />
+      {open && <DeleteModal open={open} handleClose={closeModal} />}
     </React.Fragment>
   )
 }
