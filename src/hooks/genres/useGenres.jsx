@@ -75,12 +75,12 @@ export const useDeleteGenre = () => {
 }
 
 export const useDeleteAllGenre = () => {
-  const { execute, isLoading } = useApi((id) => deleteAllItem(endpoint))
+  const { execute, isLoading } = useApi(() => deleteAllItem(endpoint))
   const alert = useAlert()
 
-  const deleteAllGenre = async (id) => {
+  const deleteAllGenre = async () => {
     try {
-      const deleted = await execute(id)
+      const deleted = await execute()
       mutate(endpoint)
       alert('Genres deleted successfully!', 'success')
       return deleted
