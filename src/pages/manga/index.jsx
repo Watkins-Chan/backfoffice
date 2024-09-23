@@ -72,8 +72,8 @@ export default function Manga() {
                     fontWeight={400}
                     sx={{
                       display: '-webkit-box',
-                      '-webkit-line-clamp': '3',
-                      '-webkit-box-orient': 'vertical',
+                      WebkitLineClamp: '3',
+                      WebkitBoxOrient: 'vertical',
                       overflow: 'hidden',
                     }}
                   >
