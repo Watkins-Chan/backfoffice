@@ -9,13 +9,13 @@ import Grid from '@mui/material/Grid'
 import SearchBar from 'components/common/SearchBar'
 import SortOptions from 'components/common/SortOptions'
 import AddNewButton from 'components/common/AddNewButton'
-import CardInfo from 'components/authors/CardInfo'
 import PaginationControl from 'components/common/PaginationControl'
 import RowPerPageSelector from 'components/common/RowPerPageSelector '
-import MenuActions from 'components/authors/MenuActions'
+import MenuActions from 'components/common/MenuActions'
+import DeleteModal from 'components/common/DeleteModal'
+import CardInfo from 'components/authors/CardInfo'
 import { useMenuActions } from 'contexts/MenuActionsContext'
 import { useHandleDeleteModal } from 'contexts/DeleteModalContext'
-import DeleteModal from 'components/common/DeleteModal'
 
 const Authors = () => {
   const { openPopover, closePopover } = useMenuActions()
