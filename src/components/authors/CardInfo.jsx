@@ -22,7 +22,7 @@ import Grid from '@mui/material/Grid'
 import { MoreOutlined, MailOutlined, LinkOutlined, EnvironmentOutlined, PhoneOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 
-const CardInfo = () => {
+const CardInfo = ({ onOpenMenu }) => {
   const theme = useTheme()
 
   const itemStyle = ({ lineClamp = 3, wordBreak = 'break-all' }) => ({
@@ -44,7 +44,7 @@ const CardInfo = () => {
         }
         subheader="Team"
         action={
-          <IconButton aria-label="settings">
+          <IconButton aria-label="settings" onClick={onOpenMenu}>
             <MoreOutlined />
           </IconButton>
         }

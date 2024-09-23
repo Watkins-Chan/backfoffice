@@ -6,6 +6,7 @@ import ThemeCustomization from 'themes'
 
 import ScrollTop from 'components/ScrollTop'
 import { AlertProvider } from 'contexts/AlertContent'
+import { MenuActionsProvider } from 'contexts/MenuActionsContext'
 
 // ==============================|| APP - THEME, ROUTER, LOCAL ||============================== //
 
@@ -14,7 +15,9 @@ export default function App() {
     <ThemeCustomization>
       <ScrollTop>
         <AlertProvider>
-          <RouterProvider router={router} />
+          <MenuActionsProvider>
+            <RouterProvider router={router} />
+          </MenuActionsProvider>
         </AlertProvider>
       </ScrollTop>
     </ThemeCustomization>
