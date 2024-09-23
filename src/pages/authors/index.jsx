@@ -19,7 +19,7 @@ import DeleteModal from 'components/modals/DeleteModal'
 
 const Authors = () => {
   const { openPopover, closePopover } = useMenuActions()
-  const { open, openModal, closeModal } = useHandleDeleteModal()
+  const { openDeleteModal, handleOpenDeleteModal } = useHandleDeleteModal()
   const [selectedId, setSelectedId] = useState(null)
 
   const actions = [
@@ -32,13 +32,13 @@ const Authors = () => {
     {
       name: 'Edit',
       func: () => {
-        openModal(selectedId), closePopover()
+        console.log('Edit'), closePopover()
       },
     },
     {
       name: 'Delete',
       func: () => {
-        openModal(selectedId), closePopover()
+        handleOpenDeleteModal(selectedId), closePopover()
       },
     },
   ]
@@ -84,7 +84,7 @@ const Authors = () => {
         </Box>
       </Stack>
       <MenuActions actions={actions} />
-      {open && <DeleteModal open={open} handleClose={closeModal} />}
+      {openDeleteModal && <DeleteModal isDeleting={false} handleDelete={() => {}} refetchGenres={() => {}} />}
     </React.Fragment>
   )
 }
