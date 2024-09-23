@@ -15,7 +15,7 @@ import RowPerPageSelector from 'components/common/RowPerPageSelector '
 import MenuActions from 'components/authors/MenuActions'
 import { useMenuActions } from 'contexts/MenuActionsContext'
 import { useHandleDeleteModal } from 'contexts/DeleteModalContext'
-import DeleteModal from 'components/modals/DeleteModal'
+import DeleteModal from 'components/common/DeleteModal'
 
 const Authors = () => {
   const { openPopover, closePopover } = useMenuActions()

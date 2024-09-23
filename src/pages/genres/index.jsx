@@ -17,7 +17,7 @@ import FileUploadButton from 'components/common/FileUploadButton'
 import PaginationControl from 'components/common/PaginationControl'
 import RemoveAllButton from 'components/common/RemoveAllButton'
 import RowPerPageSelector from 'components/common/RowPerPageSelector '
-import DeleteAllModal from 'components/modals/DeleteAllModal'
+import DeleteAllModal from 'components/genres/DeleteAllModal'
 import AddNewButton from 'components/common/AddNewButton'
 import { useGenres, useUploadGenres } from 'hooks/genres/useGenres'
 
