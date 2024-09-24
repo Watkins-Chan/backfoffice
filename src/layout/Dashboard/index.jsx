@@ -14,10 +14,10 @@ import Drawer from './Drawer'
 import Header from './Header'
 import navigation from 'menu-items'
 import Loader from 'components/Loader'
-import Breadcrumbs from 'components/@extended/Breadcrumbs'
 
 import { handlerDrawerOpen, useGetMenuMaster } from 'api/menu'
 import DashboardDefault from 'pages/dashboard'
+import Breadcrumbs from 'components/common/navigation/Breadcrumbs'
 
 // ==============================|| MAIN LAYOUT ||============================== //
 

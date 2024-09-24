@@ -9,53 +9,18 @@ import _isEmpty from 'lodash/isEmpty'
 
 import Button from '@mui/material/Button'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { styled } from '@mui/material/styles'
-import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import IconButton from '@mui/material/IconButton'
 import InputLabel from '@mui/material/InputLabel'
-import TextField from '@mui/material/TextField'
 import FormControl from '@mui/material/FormControl'
 import Stack from '@mui/material/Stack'
 
 import { CloseOutlined, SaveOutlined } from '@ant-design/icons'
 import { useCreateGenre, useUpdateGenre, useGenre, useGenres } from 'hooks/genres/useGenres'
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
-    padding: theme.spacing(2),
-  },
-  '& .MuiDialogActions-root': {
-    padding: theme.spacing(1),
-  },
-}))
-
-const BootstrapInput = styled(TextField)(({ theme }) => ({
-  'label + &': {
-    marginTop: theme.spacing(3),
-  },
-  '& .MuiInputBase-input': {
-    borderRadius: 4,
-    position: 'relative',
-    borderColor: theme.palette.mode === 'light' ? '#E0E3E7' : '#2D3843',
-    fontSize: 16,
-    transition: theme.transitions.create(['border-color', 'background-color', 'box-shadow']),
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-  },
-}))
+import BootstrapDialog from 'components/common/modals/BootstrapDialog'
+import BootstrapInput from 'components/common/inputs/BootstrapInput'
 
 const schema = yup.object({
   genre_name: yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),

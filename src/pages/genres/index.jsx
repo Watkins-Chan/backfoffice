@@ -11,14 +11,14 @@ import Divider from '@mui/material/Divider'
 
 import GenreTable from 'components/genres/GenreTable'
 import UpsertGenreModal from 'components/genres/UpsertGenreModal'
-import SearchBar from 'components/common/SearchBar'
-import SortOptions from 'components/common/SortOptions'
-import FileUploadButton from 'components/common/FileUploadButton'
-import PaginationControl from 'components/common/PaginationControl'
-import RemoveAllButton from 'components/common/RemoveAllButton'
-import RowPerPageSelector from 'components/common/RowPerPageSelector '
+import SearchBar from 'components/common/inputs/SearchBar'
+import SortOptions from 'components/common/dropdowns/SortOptions'
+import UploadButton from 'components/common/buttons/UploadButton'
+import PaginationControl from 'components/common/navigation/PaginationControl'
+import RemoveAllButton from 'components/common/buttons/RemoveAllButton'
+import RowPerPageSelector from 'components/common/dropdowns/RowPerPageSelector '
 import DeleteAllGenresModal from 'components/genres/DeleteAllGenresModal'
-import AddNewButton from 'components/common/AddNewButton'
+import AddNewButton from 'components/common/buttons/AddNewButton'
 import { useGenres, useUploadGenres } from 'hooks/genres/useGenres'
 
 const Genres = () => {
@@ -112,7 +112,7 @@ const Genres = () => {
               <Stack direction="row" alignItems="center" spacing={1}>
                 <SortOptions sort={sort} onChange={handleChangeSort} />
                 <AddNewButton onClick={handleClickOpenModal} />
-                <FileUploadButton onFileUpload={handleFileUpload} isLoading={isUploading} />
+                <UploadButton onFileUpload={handleFileUpload} isLoading={isUploading} />
                 <RemoveAllButton onOpenDeleteAllModal={handleClickOpenDeleteAllModal} disabled={_get(genres, 'data', []).length === 0} />
               </Stack>
             </Grid>

@@ -3,7 +3,7 @@ import Tooltip from '@mui/material/Tooltip'
 import CircularProgress from '@mui/material/CircularProgress'
 import { UploadOutlined } from '@ant-design/icons'
 
-const FileUploadButton = ({ onFileUpload, isLoading }) => (
+const UploadButton = ({ onFileUpload, isLoading }) => (
   <Tooltip title="Import data">
     <span>
       <IconButton component="label">
@@ -14,4 +14,4 @@ const FileUploadButton = ({ onFileUpload, isLoading }) => (
   </Tooltip>
 )
 
-export default FileUploadButton
+export default UploadButton
