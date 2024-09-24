@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useState, useCallback } from 'react'
 
 import _map from 'lodash/map'
 
@@ -16,11 +16,16 @@ import DeleteModal from 'components/common/modals/DeleteModal'
 import CardInfo from 'components/authors/CardInfo'
 import { useMenuActions } from 'contexts/MenuActionsContext'
 import { useHandleDeleteModal } from 'contexts/DeleteModalContext'
+import UpsertAuthorModal from 'components/authors/UpsertAuthorModal'
 
 const Authors = () => {
   const { openPopover, closePopover } = useMenuActions()
   const { openDeleteModal, handleOpenDeleteModal } = useHandleDeleteModal()
   const [selectedId, setSelectedId] = useState(null)
+  const [openUpsertModal, setOpenUpsertModal] = useState(false)
+
+  const handleOpenUpsertModal = useCallback(() => setOpenUpsertModal(true), [])
+  const handleCloseUpsertModal = useCallback(() => setOpenUpsertModal(false), [])
 
   const actions = [
     {
@@ -54,7 +59,7 @@ const Authors = () => {
             <Grid item xs={12} md="auto">
               <Stack direction="row" alignItems="center" spacing={1}>
                 <SortOptions />
-                <AddNewButton />
+                <AddNewButton onClick={handleOpenUpsertModal} />
               </Stack>
             </Grid>
           </Grid>
@@ -85,6 +90,7 @@ const Authors = () => {
       </Stack>
       <MenuActions actions={actions} />
       {openDeleteModal && <DeleteModal isDeleting={false} handleDelete={() => {}} refetchGenres={() => {}} />}
+      {handleCloseUpsertModal && <UpsertAuthorModal open={openUpsertModal} handleClose={handleCloseUpsertModal} />}
     </React.Fragment>
   )
 }
