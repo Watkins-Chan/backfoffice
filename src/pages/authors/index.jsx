@@ -5,11 +5,7 @@ import _map from 'lodash/map'
 import _get from 'lodash/get'
 import _isEmpty from 'lodash/isEmpty'
 
-import Avatar from '@mui/material/Avatar'
-import Skeleton from '@mui/material/Skeleton'
 import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
 import Stack from '@mui/material/Stack'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
@@ -26,6 +22,7 @@ import { useMenuActions } from 'contexts/MenuActionsContext'
 import { useHandleDeleteModal } from 'contexts/DeleteModalContext'
 import UpsertAuthorModal from 'components/authors/UpsertAuthorModal'
 import { useAuthors } from 'hooks/useAuthors'
+import EmptyData from 'components/common/skeletons/EmptyData'
 
 const Authors = () => {
   const { openPopover, closePopover } = useMenuActions()
@@ -152,107 +149,7 @@ const Authors = () => {
             ))}
             {!isGettingAuthors && _isEmpty(_get(authors, 'data', [])) && (
               <Grid item xs={12}>
-                <Box p={6}>
-                  <Grid container direction="column" alignItems="center">
-                    <Grid item>
-                      <Box>
-                        <Box position="relative">
-                          <Card
-                            sx={{
-                              borderRadius: 2,
-                              boxShadow: 'rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px',
-                              '&:hover': { boxShadow: 'rgba(0, 0, 0, 0.08) 0px 1px 4px' },
-                            }}
-                          >
-                            <CardContent>
-                              <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                  <Stack direction="row" alignItems="center">
-                                    <Avatar />
-                                    <Stack pl={2.5} width="100%">
-                                      <Skeleton width="80%" height="20px" />
-                                      <Skeleton width="40%" height="20px" />
-                                    </Stack>
-                                  </Stack>
-                                </Grid>
-                                <Grid item xs={12}>
-                                  <Skeleton width="45px" height="20px" />
-                                  <Skeleton height="20px" />
-                                  <Stack direction="row" spacing={1}>
-                                    <Skeleton width="90px" height="20px" />
-                                    <Skeleton width="38px" height="20px" />
-                                  </Stack>
-                                </Grid>
-                                <Grid item xs={12}>
-                                  <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                    <Grid container spacing={1}>
-                                      <Grid item>
-                                        <Skeleton width="40px" height="20px" />
-                                      </Grid>
-                                      <Grid item>
-                                        <Skeleton width="20px" height="20px" />
-                                      </Grid>
-                                    </Grid>
-                                    <Skeleton width="47px" height="32px" />
-                                  </Stack>
-                                </Grid>
-                              </Grid>
-                            </CardContent>
-                          </Card>
-                        </Box>
-                        <Box position="relative" top={-120} left={72}>
-                          <Card
-                            sx={{
-                              borderRadius: 2,
-                              boxShadow: 'rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px',
-                              '&:hover': { boxShadow: 'rgba(0, 0, 0, 0.08) 0px 1px 4px' },
-                            }}
-                          >
-                            <CardContent>
-                              <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                  <Stack direction="row" alignItems="center">
-                                    <Avatar />
-                                    <Stack pl={2.5} width="100%">
-                                      <Skeleton width="80%" height="20px" />
-                                      <Skeleton width="40%" height="20px" />
-                                    </Stack>
-                                  </Stack>
-                                </Grid>
-                                <Grid item xs={12}>
-                                  <Skeleton width="45px" height="20px" />
-                                  <Skeleton height="20px" />
-                                  <Stack direction="row" spacing={1}>
-                                    <Skeleton width="90px" height="20px" />
-                                    <Skeleton width="38px" height="20px" />
-                                  </Stack>
-                                </Grid>
-                                <Grid item xs={12}>
-                                  <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                    <Grid container spacing={1}>
-                                      <Grid item>
-                                        <Skeleton width="40px" height="20px" />
-                                      </Grid>
-                                      <Grid item>
-                                        <Skeleton width="20px" height="20px" />
-                                      </Grid>
-                                    </Grid>
-                                    <Skeleton width="47px" height="32px" />
-                                  </Stack>
-                                </Grid>
-                              </Grid>
-                            </CardContent>
-                          </Card>
-                        </Box>
-                      </Box>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="h4" mt={-8}>
-                        You have not created any data yet.
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Box>
+                <EmptyData />
               </Grid>
             )}
           </Grid>
