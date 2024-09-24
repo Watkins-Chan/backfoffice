@@ -18,7 +18,7 @@ import FormControl from '@mui/material/FormControl'
 import Stack from '@mui/material/Stack'
 
 import { CloseOutlined, SaveOutlined } from '@ant-design/icons'
-import { useCreateGenre, useUpdateGenre, useGenre, useGenres } from 'hooks/genres/useGenres'
+import { useCreateGenre, useUpdateGenre, useGenre, useGenres } from 'hooks/useGenres'
 import BootstrapDialog from 'components/common/modals/BootstrapDialog'
 import BootstrapInput from 'components/common/inputs/BootstrapInput'
 

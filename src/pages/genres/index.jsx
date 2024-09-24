@@ -19,7 +19,7 @@ import RemoveAllButton from 'components/common/buttons/RemoveAllButton'
 import RowPerPageSelector from 'components/common/dropdowns/RowPerPageSelector '
 import DeleteAllGenresModal from 'components/genres/DeleteAllGenresModal'
 import AddNewButton from 'components/common/buttons/AddNewButton'
-import { useGenres, useUploadGenres } from 'hooks/genres/useGenres'
+import { useGenres, useUploadGenres } from 'hooks/useGenres'
 
 const Genres = () => {
   const theme = useTheme()

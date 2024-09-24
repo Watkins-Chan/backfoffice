@@ -7,7 +7,7 @@ import Button from '@mui/material/Button'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { DeleteFilled } from '@ant-design/icons'
 import { lighten } from '@mui/system'
-import { useDeleteAllGenre } from 'hooks/genres/useGenres'
+import { useDeleteAllGenre } from 'hooks/useGenres'
 
 export default function DeleteAllGenresModal(props) {
   const { open, handleClose, refetchGenres } = props

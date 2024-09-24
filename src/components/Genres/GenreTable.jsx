@@ -20,7 +20,7 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import DeleteModal from 'components/common/modals/DeleteModal'
 import UpsertGenreModal from 'components/genres/UpsertGenreModal'
 import { useHandleDeleteModal } from 'contexts/DeleteModalContext'
-import { useDeleteGenre } from 'hooks/genres/useGenres'
+import { useDeleteGenre } from 'hooks/useGenres'
 
 function createData(id, name, description, createdDate) {
   return {
