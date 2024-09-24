@@ -9,7 +9,7 @@ import { DeleteFilled } from '@ant-design/icons'
 import { lighten } from '@mui/system'
 import { useDeleteAllGenre } from 'hooks/genres/useGenres'
 
-export default function DeleteAllModal(props) {
+export default function DeleteAllGenresModal(props) {
   const { open, handleClose, refetchGenres } = props
 
   const { deleteAllGenre, isLoading: isDeleting } = useDeleteAllGenre()

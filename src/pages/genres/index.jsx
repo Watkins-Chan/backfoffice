@@ -17,7 +17,7 @@ import FileUploadButton from 'components/common/FileUploadButton'
 import PaginationControl from 'components/common/PaginationControl'
 import RemoveAllButton from 'components/common/RemoveAllButton'
 import RowPerPageSelector from 'components/common/RowPerPageSelector '
-import DeleteAllModal from 'components/genres/DeleteAllModal'
+import DeleteAllGenresModal from 'components/genres/DeleteAllGenresModal'
 import AddNewButton from 'components/common/AddNewButton'
 import { useGenres, useUploadGenres } from 'hooks/genres/useGenres'
 
@@ -132,7 +132,7 @@ const Genres = () => {
         </Box>
       </Card>
       {openModal && <UpsertGenreModal open={openModal} handleClose={handleCloseModal} refetchGenres={refetchGenres} />}
-      {openDeleteAllModal && <DeleteAllModal open={openDeleteAllModal} handleClose={handleCloseDeleteAllModal} refetchGenres={refetchGenres} />}
+      {openDeleteAllModal && <DeleteAllGenresModal open={openDeleteAllModal} handleClose={handleCloseDeleteAllModal} refetchGenres={refetchGenres} />}
     </React.Fragment>
   )
 }
