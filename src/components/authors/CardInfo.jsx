@@ -1,4 +1,5 @@
 import React from 'react'
+import { formatDistanceToNow } from 'date-fns'
 
 import _map from 'lodash/map'
 import _get from 'lodash/get'
@@ -22,7 +23,7 @@ import Grid from '@mui/material/Grid'
 import { MoreOutlined, MailOutlined, LinkOutlined, EnvironmentOutlined, PhoneOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 
-const CardInfo = ({ onOpenMenu }) => {
+const CardInfo = ({ data, onOpenMenu }) => {
   const theme = useTheme()
 
   const itemStyle = ({ lineClamp = 3, wordBreak = 'break-all' }) => ({
@@ -39,7 +40,7 @@ const CardInfo = ({ onOpenMenu }) => {
         avatar={<Avatar>R</Avatar>}
         title={
           <Typography>
-            <b>Ollie Watkins</b>
+            <b>{_get(data, 'author_name', '')}</b>
           </Typography>
         }
         subheader="Team"
@@ -52,7 +53,7 @@ const CardInfo = ({ onOpenMenu }) => {
       <Divider variant="middle" />
       <CardContent>
         <Typography paragraph sx={itemStyle}>
-          Hello, Loit nih zadul wokazu ta eno pigzuziz ruwulmid divkumas wehumjuv zu pew erasis gaba ofa fenucfo.
+          {_get(data, 'description', '')}
         </Typography>
         <List disablePadding>
           <ListItem disableGutters disablePadding>
@@ -64,7 +65,7 @@ const CardInfo = ({ onOpenMenu }) => {
                 color: theme.palette.grey[500],
                 sx: itemStyle({ lineClamp: 1 }),
               }}
-              primary="huy.mtruong+distributor+20092024@digicommercegroup.com"
+              primary={_get(data, 'email', '')}
             />
           </ListItem>
           <ListItem disableGutters disablePadding>
@@ -76,7 +77,7 @@ const CardInfo = ({ onOpenMenu }) => {
                 color: theme.palette.grey[500],
                 sx: itemStyle({ lineClamp: 1 }),
               }}
-              primary="+1 (687) 252-5573"
+              primary={_get(data, 'phone', '')}
             />
           </ListItem>
           <ListItem disableGutters disablePadding>
@@ -104,7 +105,7 @@ const CardInfo = ({ onOpenMenu }) => {
       </CardContent>
       <CardActions sx={{ justifyContent: 'space-between' }}>
         <Typography variant="caption" color={theme.palette.grey[500]}>
-          Updated in 2 days ago
+          Updated in {formatDistanceToNow(new Date(_get(data, 'createdAt', new Date())), { addSuffix: true })}
         </Typography>
         <Button variant="outlined" size="small">
           Preview
