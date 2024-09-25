@@ -15,13 +15,15 @@ import CardMedia from '@mui/material/CardMedia'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import IconButton from '@mui/material/IconButton'
-import { MoreOutlined } from '@ant-design/icons'
 import RowPerPageSelector from 'components/common/dropdowns/RowPerPageSelector '
 import PaginationControl from 'components/common/navigation/PaginationControl'
-import { useMangas } from 'hooks/useMangas'
+import { MoreOutlined } from '@ant-design/icons'
+import { useMangas, useUploadMangas } from 'hooks/useMangas'
+
 import SearchBar from 'components/common/inputs/SearchBar'
 import SortOptions from 'components/common/dropdowns/SortOptions'
 import AddNewButton from 'components/common/buttons/AddNewButton'
+import UploadButton from 'components/common/buttons/UploadButton'
 
 export default function Manga() {
   const theme = useTheme()
@@ -37,6 +39,7 @@ export default function Manga() {
   const sortOrder = useMemo(() => sort.split('-')[1], [sort])
 
   const { data: mangas, isLoading: isGettingMangas, mutate: refetchMangas } = useMangas(row, currentPage, searchKeyword, sortBy, sortOrder)
+  const { uploadMangas, isLoading: isUploading } = useUploadMangas()
 
   const updateParams = useCallback(
     (newParams) => {
@@ -85,6 +88,16 @@ export default function Manga() {
     updateParams({ q: inputValue.trim(), currentPage: 1 })
   }, [inputValue, searchParams, updateParams])
 
+  const handleFileUpload = async (event) => {
+    console.log('🚀 ~ handleFileUpload ~ event:', event)
+    const file = event.target.files[0]
+    console.log('🚀 ~ handleFileUpload ~ file:', file)
+    if (file) {
+      await uploadMangas(file)
+      refetchMangas()
+    }
+  }
+
   return (
     <Stack spacing={3}>
       <Box>
@@ -95,6 +108,7 @@ export default function Manga() {
           <Grid item xs={12} md="auto">
             <Stack direction="row" alignItems="center" spacing={1}>
               <SortOptions sort={sort} onChange={handleChangeSort} />
+              <UploadButton onFileUpload={handleFileUpload} isLoading={isUploading} />
               <AddNewButton />
             </Stack>
           </Grid>
