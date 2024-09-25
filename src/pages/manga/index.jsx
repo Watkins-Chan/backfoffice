@@ -1,5 +1,11 @@
-import React from 'react'
+import { useMemo, useState, useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { format, parseISO } from 'date-fns'
 
+import _get from 'lodash/get'
+import _map from 'lodash/map'
+
+import useTheme from '@mui/material/styles/useTheme'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -9,63 +15,109 @@ import CardMedia from '@mui/material/CardMedia'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import IconButton from '@mui/material/IconButton'
-import Button from '@mui/material/Button'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import Pagination from '@mui/material/Pagination'
-import TextField from '@mui/material/TextField'
-import InputAdornment from '@mui/material/InputAdornment'
-import InputLabel from '@mui/material/InputLabel'
-import Chip from '@mui/material/Chip'
-
-import useTheme from '@mui/material/styles/useTheme'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import { MoreOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
-import AdvanceSearch from 'components/searchs/AdvancedSearch'
+import { MoreOutlined } from '@ant-design/icons'
+import RowPerPageSelector from 'components/common/dropdowns/RowPerPageSelector '
+import PaginationControl from 'components/common/navigation/PaginationControl'
+import { useMangas } from 'hooks/useMangas'
+import SearchBar from 'components/common/inputs/SearchBar'
+import SortOptions from 'components/common/dropdowns/SortOptions'
+import AddNewButton from 'components/common/buttons/AddNewButton'
 
 export default function Manga() {
   const theme = useTheme()
-  const matches = useMediaQuery(theme.breakpoints.down('sm'))
-  const [row, setRow] = React.useState(10)
-  const [sort, setSort] = React.useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const handleChange = (event) => {
-    setSort(event.target.value)
-  }
+  const [row, setRow] = useState(Number(searchParams.get('pageSize')) || 10)
+  const [currentPage, setCurrentPage] = useState(Number(searchParams.get('currentPage')) || 1)
+  const [sort, setSort] = useState(searchParams.get('sort') || 'createdAt-desc')
+  const [searchKeyword, setSearchKeyword] = useState(searchParams.get('q'))
+  const [inputValue, setInputValue] = useState(searchKeyword)
 
-  const handleChangeRow = (event) => {
-    setRow(event.target.value)
-  }
+  const sortBy = useMemo(() => sort.split('-')[0], [sort])
+  const sortOrder = useMemo(() => sort.split('-')[1], [sort])
+
+  const { data: mangas, isLoading: isGettingMangas, mutate: refetchMangas } = useMangas(row, currentPage, searchKeyword, sortBy, sortOrder)
+
+  const updateParams = useCallback(
+    (newParams) => {
+      const urlParams = new URLSearchParams(searchParams)
+      Object.entries(newParams).forEach(([key, value]) => urlParams.set(key, value))
+      setSearchParams(urlParams)
+    },
+    [searchParams, setSearchParams],
+  )
+
+  const handleChangeSort = useCallback(
+    (event) => {
+      const value = event.target.value
+      setSort(value)
+      setCurrentPage(1)
+      updateParams({ sort: value, currentPage: 1 })
+    },
+    [updateParams],
+  )
+
+  const handleChangeRow = useCallback(
+    (event) => {
+      const newPageSize = event.target.value
+      setRow(newPageSize)
+      setCurrentPage(1)
+      updateParams({ pageSize: newPageSize, currentPage: 1 })
+    },
+    [updateParams],
+  )
+
+  const handleChangePage = useCallback(
+    (event, value) => {
+      setCurrentPage(value)
+      updateParams({ currentPage: value })
+    },
+    [updateParams],
+  )
+
+  const handleInputChange = useCallback((event) => {
+    setInputValue(event.target.value)
+  }, [])
+
+  const handleSearch = useCallback(() => {
+    setSearchKeyword(inputValue.trim())
+    setCurrentPage(1)
+    updateParams({ q: inputValue.trim(), currentPage: 1 })
+  }, [inputValue, searchParams, updateParams])
 
   return (
     <Stack spacing={3}>
       <Box>
-        <AdvanceSearch />
+        <Grid container spacing={2} justifyContent="space-between">
+          <Grid item xs={12} md="auto">
+            <SearchBar inputValue={inputValue} onChange={handleInputChange} onSearch={handleSearch} />
+          </Grid>
+          <Grid item xs={12} md="auto">
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <SortOptions sort={sort} onChange={handleChangeSort} />
+              <AddNewButton />
+            </Stack>
+          </Grid>
+        </Grid>
       </Box>
       <Box>
         <Grid container spacing={2}>
-          {[...Array(20)].map((_, index) => (
+          {_map(_get(mangas, 'data', []), (manga, index) => (
             <Grid key={index} item xs={12} sm={4} md={3}>
               <Card variant="outlined" sx={{ height: '100%', '&:hover': { cursor: 'pointer', boxShadow: theme.shadows[10] } }}>
                 <CardHeader
-                  title="Shrimp and Chorizo Paella"
-                  subheader="September 14, 2016"
+                  title={_get(manga, 'name', '')}
+                  subheader={format(parseISO(_get(manga, 'createdAt')), 'MMMM dd, yyyy')}
                   action={
                     <IconButton aria-label="settings">
                       <MoreOutlined />
                     </IconButton>
                   }
                 />
-                <CardMedia
-                  component="img"
-                  height="194"
-                  image="https://cdn.prod.website-files.com/62e29661f8efaa50d68a5786/642e8593346bbd4898663ffa_NFT%20%26%20ART.png"
-                  alt="Paella dish"
-                />
+                <CardMedia component="img" height="194" image={_get(manga, 'image.url', '')} alt="Paella dish" />
                 <CardContent>
                   <Typography textTransform="uppercase" color={theme.palette.grey[500]}>
-                    Author
+                    {_get(manga, 'author.name', '')}
                   </Typography>
                   <Typography
                     variant="h5"
@@ -77,7 +129,7 @@ export default function Manga() {
                       overflow: 'hidden',
                     }}
                   >
-                    This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.
+                    {_get(manga, 'description', '')}
                   </Typography>
                 </CardContent>
               </Card>
@@ -85,25 +137,13 @@ export default function Manga() {
           ))}
         </Grid>
       </Box>
-      <Box>
+      <Box py={2}>
         <Grid container spacing={2} justifyContent="space-between" alignItems="center">
           <Grid item xs={3}>
-            <Stack direction="row" alignItems="center">
-              <Typography variant="caption" color="textSecondary" mr={1}>
-                Row per page
-              </Typography>
-              <FormControl sx={{ '& > div': { fontSize: '0.75rem', maxWidth: 64 } }}>
-                <Select size="small" value={row} onChange={handleChangeRow}>
-                  <MenuItem value={10}>10</MenuItem>
-                  <MenuItem value={25}>25</MenuItem>
-                  <MenuItem value={50}>50</MenuItem>
-                  <MenuItem value={100}>100</MenuItem>
-                </Select>
-              </FormControl>
-            </Stack>
+            <RowPerPageSelector row={row} onChange={handleChangeRow} />
           </Grid>
           <Grid item>
-            <Pagination count={10} showFirstButton showLastButton />
+            <PaginationControl count={_get(mangas, 'page._totalPages', 0)} page={currentPage} onChange={handleChangePage} />
           </Grid>
         </Grid>
       </Box>
