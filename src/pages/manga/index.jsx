@@ -165,7 +165,7 @@ export default function Manga() {
       <Box py={2}>
         <Grid container spacing={2} justifyContent="space-between" alignItems="center">
           <Grid item xs={3}>
-            <RowPerPageSelector row={row} onChange={handleChangeRow} />
+            <RowPerPageSelector data={[12, 24, 48, 100]} row={row} onChange={handleChangeRow} />
           </Grid>
           <Grid item>
             <PaginationControl count={_get(mangas, 'page._totalPages', 0)} page={currentPage} onChange={handleChangePage} />
