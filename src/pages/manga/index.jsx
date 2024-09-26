@@ -26,13 +26,14 @@ import SortOptions from 'components/common/dropdowns/SortOptions'
 import AddNewButton from 'components/common/buttons/AddNewButton'
 import UploadButton from 'components/common/buttons/UploadButton'
 import EmptyData from 'components/common/skeletons/EmptyData'
+import { MANGA_PAGE_SIZE, CURRENT_PAGE } from 'constants'
 
 export default function Manga() {
   const theme = useTheme()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const [row, setRow] = useState(Number(searchParams.get('pageSize')) || 10)
-  const [currentPage, setCurrentPage] = useState(Number(searchParams.get('currentPage')) || 1)
+  const [row, setRow] = useState(Number(searchParams.get('pageSize')) || MANGA_PAGE_SIZE)
+  const [currentPage, setCurrentPage] = useState(Number(searchParams.get('currentPage')) || CURRENT_PAGE)
   const [sort, setSort] = useState(searchParams.get('sort') || 'createdAt-desc')
   const [searchKeyword, setSearchKeyword] = useState(searchParams.get('q'))
   const [inputValue, setInputValue] = useState(searchKeyword)

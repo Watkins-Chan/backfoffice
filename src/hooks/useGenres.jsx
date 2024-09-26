@@ -3,10 +3,11 @@ import useSWR, { mutate } from 'swr'
 import { fetchAll, fetchOne, createItem, updateItem, deleteItem, uploadFile, deleteAllItem } from 'api/apiClient'
 import { useAlert } from 'contexts/AlertContent'
 import { useApi } from 'customHooks/useApi'
+import { MANGA_PAGE_SIZE, CURRENT_PAGE } from 'constants'
 
 const endpoint = '/genres'
 
-export const useGenres = (pageSize = 10, currentPage = 1, q, sortBy, sortOrder = 'desc') => {
+export const useGenres = (pageSize = MANGA_PAGE_SIZE, currentPage = CURRENT_PAGE, q, sortBy, sortOrder = 'desc') => {
   const { data, error, isLoading, mutate } = useSWR([endpoint, pageSize, currentPage, q, sortBy, sortOrder], () =>
     fetchAll(endpoint, { pageSize, currentPage, q, sortBy, sortOrder }),
   )
