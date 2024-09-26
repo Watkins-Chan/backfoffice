@@ -4,6 +4,7 @@ import { format, parseISO } from 'date-fns'
 
 import _get from 'lodash/get'
 import _map from 'lodash/map'
+import _isEmpty from 'lodash/isEmpty'
 
 import useTheme from '@mui/material/styles/useTheme'
 import Typography from '@mui/material/Typography'
@@ -24,6 +25,7 @@ import SearchBar from 'components/common/inputs/SearchBar'
 import SortOptions from 'components/common/dropdowns/SortOptions'
 import AddNewButton from 'components/common/buttons/AddNewButton'
 import UploadButton from 'components/common/buttons/UploadButton'
+import EmptyData from 'components/common/skeletons/EmptyData'
 
 export default function Manga() {
   const theme = useTheme()
@@ -89,9 +91,7 @@ export default function Manga() {
   }, [inputValue, searchParams, updateParams])
 
   const handleFileUpload = async (event) => {
-    console.log('🚀 ~ handleFileUpload ~ event:', event)
     const file = event.target.files[0]
-    console.log('🚀 ~ handleFileUpload ~ file:', file)
     if (file) {
       await uploadMangas(file)
       refetchMangas()
@@ -116,6 +116,11 @@ export default function Manga() {
       </Box>
       <Box>
         <Grid container spacing={2}>
+          {isGettingMangas && (
+            <Grid item xs={12}>
+              <Typography>Loading...</Typography>
+            </Grid>
+          )}
           {_map(_get(mangas, 'data', []), (manga, index) => (
             <Grid key={index} item xs={12} sm={4} md={3}>
               <Card variant="outlined" sx={{ height: '100%', '&:hover': { cursor: 'pointer', boxShadow: theme.shadows[10] } }}>
@@ -149,6 +154,11 @@ export default function Manga() {
               </Card>
             </Grid>
           ))}
+          {!isGettingMangas && _isEmpty(_get(mangas, 'data', [])) && (
+            <Grid item xs={12}>
+              <EmptyData />
+            </Grid>
+          )}
         </Grid>
       </Box>
       <Box py={2}>
