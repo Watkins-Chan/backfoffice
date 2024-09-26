@@ -24,54 +24,24 @@ import UpsertMangaModal from 'components/mangas/UpsertMangaModal'
 import MangaCard from 'components/mangas/MangaCard'
 import { useMenuActions } from 'contexts/MenuActionsContext'
 import MenuActions from 'components/common/dropdowns/MenuActions'
-import { useUpdateParams } from 'utils/updateParams'
 
 export default function Manga() {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const updateParams = useUpdateParams()
+  const [searchParams] = useSearchParams()
 
+  const { openPopover, closePopover } = useMenuActions()
   const [idManga, setIdManga] = useState(null)
   const [selectedId, setSelectedId] = useState(null)
-  const { openPopover, closePopover } = useMenuActions()
+
   const pageSize = Number(searchParams.get('pageSize')) || MANGA_PAGE_SIZE
-  const [currentPage, setCurrentPage] = useState(Number(searchParams.get('currentPage')) || CURRENT_PAGE)
-  const [sort, setSort] = useState(searchParams.get('sort') || 'createdAt-desc')
-  const [searchKeyword, setSearchKeyword] = useState(searchParams.get('q'))
-  const [inputValue, setInputValue] = useState(searchKeyword)
+  const currentPage = Number(searchParams.get('currentPage')) || CURRENT_PAGE
+  const sort = searchParams.get('sort') || 'createdAt-desc'
+  const searchKeyword = searchParams.get('q')
 
   const sortBy = useMemo(() => sort.split('-')[0], [sort])
   const sortOrder = useMemo(() => sort.split('-')[1], [sort])
 
   const { data: mangas, isLoading: isGettingMangas, mutate: refetchMangas } = useMangas(pageSize, currentPage, searchKeyword, sortBy, sortOrder)
   const { uploadMangas, isLoading: isUploading } = useUploadMangas()
-
-  const handleChangeSort = useCallback(
-    (event) => {
-      const value = event.target.value
-      setSort(value)
-      setCurrentPage(1)
-      updateParams({ sort: value, currentPage: 1 })
-    },
-    [updateParams],
-  )
-
-  const handleChangePage = useCallback(
-    (event, value) => {
-      setCurrentPage(value)
-      updateParams({ currentPage: value })
-    },
-    [updateParams],
-  )
-
-  const handleInputChange = useCallback((event) => {
-    setInputValue(event.target.value)
-  }, [])
-
-  const handleSearch = useCallback(() => {
-    setSearchKeyword(inputValue.trim())
-    setCurrentPage(1)
-    updateParams({ q: inputValue.trim(), currentPage: 1 })
-  }, [inputValue, searchParams, updateParams])
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0]
@@ -110,11 +80,11 @@ export default function Manga() {
         <Box>
           <Grid container spacing={2} justifyContent="space-between">
             <Grid item xs={12} md="auto">
-              <SearchBar inputValue={inputValue} onChange={handleInputChange} onSearch={handleSearch} />
+              <SearchBar />
             </Grid>
             <Grid item xs={12} md="auto">
               <Stack direction="row" alignItems="center" spacing={1}>
-                <SortOptions sort={sort} onChange={handleChangeSort} />
+                <SortOptions />
                 <UploadButton onFileUpload={handleFileUpload} isLoading={isUploading} />
                 <AddNewButton onClick={handleOpenUpsertModal} />
               </Stack>
@@ -151,7 +121,7 @@ export default function Manga() {
               <RowPerPageSelector data={[12, 24, 48, 100]} />
             </Grid>
             <Grid item>
-              <PaginationControl count={_get(mangas, 'page._totalPages', 0)} page={currentPage} onChange={handleChangePage} />
+              <PaginationControl count={_get(mangas, 'page._totalPages', 0)} />
             </Grid>
           </Grid>
         </Box>

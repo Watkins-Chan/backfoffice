@@ -1,7 +1,8 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import _map from 'lodash/map'
+import _get from 'lodash/get'
 
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
@@ -9,14 +10,14 @@ import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import { useUpdateParams } from 'utils/updateParams'
-import { MANGA_PAGE_SIZE } from 'constants'
+import { PAGE_SIZE } from 'constants'
 
 const defaultValue = [10, 25, 50, 100]
 
 const RowPerPageSelector = ({ data }) => {
   const updateParams = useUpdateParams()
   const [searchParams] = useSearchParams()
-  const [row, setRow] = useState(Number(searchParams.get('pageSize')) || MANGA_PAGE_SIZE)
+  const [row, setRow] = useState(Number(searchParams.get('pageSize')) || _get(data, '[0]', PAGE_SIZE))
 
   const handleChangeRow = useCallback(
     (event) => {
@@ -24,7 +25,7 @@ const RowPerPageSelector = ({ data }) => {
       setRow(newPageSize)
       updateParams({ pageSize: newPageSize, currentPage: 1 })
     },
-    [useUpdateParams],
+    [updateParams],
   )
 
   return (
