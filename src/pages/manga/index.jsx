@@ -24,15 +24,16 @@ import UpsertMangaModal from 'components/mangas/UpsertMangaModal'
 import MangaCard from 'components/mangas/MangaCard'
 import { useMenuActions } from 'contexts/MenuActionsContext'
 import MenuActions from 'components/common/dropdowns/MenuActions'
+import { useUpdateParams } from 'utils/updateParams'
 
 export default function Manga() {
   const [searchParams, setSearchParams] = useSearchParams()
+  const updateParams = useUpdateParams()
 
   const [idManga, setIdManga] = useState(null)
   const [selectedId, setSelectedId] = useState(null)
   const { openPopover, closePopover } = useMenuActions()
-
-  const [row, setRow] = useState(Number(searchParams.get('pageSize')) || MANGA_PAGE_SIZE)
+  const pageSize = Number(searchParams.get('pageSize')) || MANGA_PAGE_SIZE
   const [currentPage, setCurrentPage] = useState(Number(searchParams.get('currentPage')) || CURRENT_PAGE)
   const [sort, setSort] = useState(searchParams.get('sort') || 'createdAt-desc')
   const [searchKeyword, setSearchKeyword] = useState(searchParams.get('q'))
@@ -41,17 +42,8 @@ export default function Manga() {
   const sortBy = useMemo(() => sort.split('-')[0], [sort])
   const sortOrder = useMemo(() => sort.split('-')[1], [sort])
 
-  const { data: mangas, isLoading: isGettingMangas, mutate: refetchMangas } = useMangas(row, currentPage, searchKeyword, sortBy, sortOrder)
+  const { data: mangas, isLoading: isGettingMangas, mutate: refetchMangas } = useMangas(pageSize, currentPage, searchKeyword, sortBy, sortOrder)
   const { uploadMangas, isLoading: isUploading } = useUploadMangas()
-
-  const updateParams = useCallback(
-    (newParams) => {
-      const urlParams = new URLSearchParams(searchParams)
-      Object.entries(newParams).forEach(([key, value]) => urlParams.set(key, value))
-      setSearchParams(urlParams)
-    },
-    [searchParams, setSearchParams],
-  )
 
   const handleChangeSort = useCallback(
     (event) => {
@@ -59,16 +51,6 @@ export default function Manga() {
       setSort(value)
       setCurrentPage(1)
       updateParams({ sort: value, currentPage: 1 })
-    },
-    [updateParams],
-  )
-
-  const handleChangeRow = useCallback(
-    (event) => {
-      const newPageSize = event.target.value
-      setRow(newPageSize)
-      setCurrentPage(1)
-      updateParams({ pageSize: newPageSize, currentPage: 1 })
     },
     [updateParams],
   )
@@ -166,7 +148,7 @@ export default function Manga() {
         <Box py={2}>
           <Grid container spacing={2} justifyContent="space-between" alignItems="center">
             <Grid item xs={3}>
-              <RowPerPageSelector data={[12, 24, 48, 100]} row={row} onChange={handleChangeRow} />
+              <RowPerPageSelector data={[12, 24, 48, 100]} />
             </Grid>
             <Grid item>
               <PaginationControl count={_get(mangas, 'page._totalPages', 0)} page={currentPage} onChange={handleChangePage} />
