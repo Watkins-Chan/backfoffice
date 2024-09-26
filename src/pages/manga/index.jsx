@@ -1,24 +1,17 @@
+import React from 'react'
 import { useMemo, useState, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { format, parseISO } from 'date-fns'
 
 import _get from 'lodash/get'
 import _map from 'lodash/map'
 import _isEmpty from 'lodash/isEmpty'
 
-import useTheme from '@mui/material/styles/useTheme'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
-import CardMedia from '@mui/material/CardMedia'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
-import IconButton from '@mui/material/IconButton'
 import RowPerPageSelector from 'components/common/dropdowns/RowPerPageSelector '
 import PaginationControl from 'components/common/navigation/PaginationControl'
-import { MoreOutlined } from '@ant-design/icons'
 import { useMangas, useUploadMangas } from 'hooks/useMangas'
 
 import SearchBar from 'components/common/inputs/SearchBar'
@@ -27,10 +20,17 @@ import AddNewButton from 'components/common/buttons/AddNewButton'
 import UploadButton from 'components/common/buttons/UploadButton'
 import EmptyData from 'components/common/skeletons/EmptyData'
 import { MANGA_PAGE_SIZE, CURRENT_PAGE } from 'constants'
+import UpsertMangaModal from 'components/mangas/UpsertMangaModal'
+import MangaCard from 'components/mangas/MangaCard'
+import { useMenuActions } from 'contexts/MenuActionsContext'
+import MenuActions from 'components/common/dropdowns/MenuActions'
 
 export default function Manga() {
-  const theme = useTheme()
   const [searchParams, setSearchParams] = useSearchParams()
+
+  const [idManga, setIdManga] = useState(null)
+  const [selectedId, setSelectedId] = useState(null)
+  const { openPopover, closePopover } = useMenuActions()
 
   const [row, setRow] = useState(Number(searchParams.get('pageSize')) || MANGA_PAGE_SIZE)
   const [currentPage, setCurrentPage] = useState(Number(searchParams.get('currentPage')) || CURRENT_PAGE)
@@ -99,79 +99,83 @@ export default function Manga() {
     }
   }
 
+  const handleOpenUpsertModal = useCallback((_, id) => {
+    setIdManga(id ?? false)
+  }, [])
+
+  const handleCloseUpsertModal = useCallback(() => {
+    setIdManga(null)
+  }, [])
+
+  const actions = [
+    {
+      name: 'Edit',
+      func: () => {
+        console.log('Edit'), closePopover()
+      },
+    },
+    {
+      name: 'Delete',
+      func: () => {
+        closePopover()
+      },
+    },
+  ]
+
   return (
-    <Stack spacing={3}>
-      <Box>
-        <Grid container spacing={2} justifyContent="space-between">
-          <Grid item xs={12} md="auto">
-            <SearchBar inputValue={inputValue} onChange={handleInputChange} onSearch={handleSearch} />
-          </Grid>
-          <Grid item xs={12} md="auto">
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <SortOptions sort={sort} onChange={handleChangeSort} />
-              <UploadButton onFileUpload={handleFileUpload} isLoading={isUploading} />
-              <AddNewButton />
-            </Stack>
-          </Grid>
-        </Grid>
-      </Box>
-      <Box>
-        <Grid container spacing={2}>
-          {isGettingMangas && (
-            <Grid item xs={12}>
-              <Typography>Loading...</Typography>
+    <React.Fragment>
+      <Stack spacing={3}>
+        <Box>
+          <Grid container spacing={2} justifyContent="space-between">
+            <Grid item xs={12} md="auto">
+              <SearchBar inputValue={inputValue} onChange={handleInputChange} onSearch={handleSearch} />
             </Grid>
-          )}
-          {_map(_get(mangas, 'data', []), (manga, index) => (
-            <Grid key={index} item xs={12} sm={4} md={3}>
-              <Card variant="outlined" sx={{ height: '100%', '&:hover': { cursor: 'pointer', boxShadow: theme.shadows[10] } }}>
-                <CardHeader
-                  title={_get(manga, 'name', '')}
-                  subheader={format(parseISO(_get(manga, 'createdAt')), 'MMMM dd, yyyy')}
-                  action={
-                    <IconButton aria-label="settings">
-                      <MoreOutlined />
-                    </IconButton>
-                  }
+            <Grid item xs={12} md="auto">
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <SortOptions sort={sort} onChange={handleChangeSort} />
+                <UploadButton onFileUpload={handleFileUpload} isLoading={isUploading} />
+                <AddNewButton onClick={handleOpenUpsertModal} />
+              </Stack>
+            </Grid>
+          </Grid>
+        </Box>
+        <Box>
+          <Grid container spacing={2}>
+            {isGettingMangas && (
+              <Grid item xs={12}>
+                <Typography>Loading...</Typography>
+              </Grid>
+            )}
+            {_map(_get(mangas, 'data', []), (manga, index) => (
+              <Grid key={index} item xs={12} sm={4} md={3}>
+                <MangaCard
+                  manga={manga}
+                  onActions={(event) => {
+                    openPopover(event, index + 1), setSelectedId(index + 1)
+                  }}
                 />
-                <CardMedia component="img" height="194" image={_get(manga, 'image.url', '')} alt="Paella dish" />
-                <CardContent>
-                  <Typography textTransform="uppercase" color={theme.palette.grey[500]}>
-                    {_get(manga, 'author.name', '')}
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    fontWeight={400}
-                    sx={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: '3',
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    {_get(manga, 'description', '')}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-          {!isGettingMangas && _isEmpty(_get(mangas, 'data', [])) && (
-            <Grid item xs={12}>
-              <EmptyData />
-            </Grid>
-          )}
-        </Grid>
-      </Box>
-      <Box py={2}>
-        <Grid container spacing={2} justifyContent="space-between" alignItems="center">
-          <Grid item xs={3}>
-            <RowPerPageSelector data={[12, 24, 48, 100]} row={row} onChange={handleChangeRow} />
+              </Grid>
+            ))}
+            {!isGettingMangas && _isEmpty(_get(mangas, 'data', [])) && (
+              <Grid item xs={12}>
+                <EmptyData />
+              </Grid>
+            )}
           </Grid>
-          <Grid item>
-            <PaginationControl count={_get(mangas, 'page._totalPages', 0)} page={currentPage} onChange={handleChangePage} />
+        </Box>
+        <Box py={2}>
+          <Grid container spacing={2} justifyContent="space-between" alignItems="center">
+            <Grid item xs={3}>
+              <RowPerPageSelector data={[12, 24, 48, 100]} row={row} onChange={handleChangeRow} />
+            </Grid>
+            <Grid item>
+              <PaginationControl count={_get(mangas, 'page._totalPages', 0)} page={currentPage} onChange={handleChangePage} />
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
-    </Stack>
+        </Box>
+      </Stack>
+      <MenuActions actions={actions} />
+      {idManga !== null && <UpsertMangaModal idManga={idManga} handleClose={handleCloseUpsertModal} />}
+    </React.Fragment>
   )
 }
