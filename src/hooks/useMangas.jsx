@@ -1,4 +1,4 @@
-import { fetchAll, uploadFile } from 'api/apiClient'
+import { createItem, fetchAll, uploadFile } from 'api/apiClient'
 import { MANGA_PAGE_SIZE, CURRENT_PAGE } from 'constants'
 import { useAlert } from 'contexts/AlertContent'
 import { useApi } from 'customHooks/useApi'
@@ -29,4 +29,22 @@ export const useUploadMangas = () => {
   }
 
   return { uploadMangas, isLoading }
+}
+
+export const useCreateManga = () => {
+  const { execute, isLoading } = useApi((manga) => createItem(endpoint, manga))
+  const alert = useAlert()
+
+  const createManga = async (manga) => {
+    try {
+      const newManga = await execute(manga)
+      alert('Manga created successfully!', 'success')
+      return newManga
+    } catch (error) {
+      alert('Failed to create manga.', 'error')
+      throw error
+    }
+  }
+
+  return { createManga, isLoading }
 }

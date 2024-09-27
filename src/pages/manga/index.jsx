@@ -127,7 +127,7 @@ export default function Manga() {
         </Box>
       </Stack>
       <MenuActions actions={actions} />
-      {idManga !== null && <UpsertMangaModal idManga={idManga} handleClose={handleCloseUpsertModal} />}
+      {idManga !== null && <UpsertMangaModal idManga={idManga} handleClose={handleCloseUpsertModal} refetchMangas={refetchMangas} />}
     </React.Fragment>
   )
 }

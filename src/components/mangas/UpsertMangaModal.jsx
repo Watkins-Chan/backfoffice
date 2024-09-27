@@ -4,6 +4,7 @@ import * as yup from 'yup'
 import { useSearchParams } from 'react-router-dom'
 
 import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
 import LoadingButton from '@mui/lab/LoadingButton'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -12,49 +13,82 @@ import IconButton from '@mui/material/IconButton'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import Stack from '@mui/material/Stack'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import TextField from '@mui/material/TextField'
 
 import { CloseOutlined, SaveOutlined } from '@ant-design/icons'
 import BootstrapDialog from 'components/common/modals/BootstrapDialog'
 import BootstrapInput from 'components/common/inputs/BootstrapInput'
+import { useCreateManga } from 'hooks/useMangas'
 
-const schema = yup.object({
-  name: yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
-  description: yup.string(),
+const schema = yup.object().shape({
+  name: yup.string().required('Name is required'),
+  description: yup.string().required('Description is required'),
+  // status: yup.string().required('Status is required'),
+  // author: yup.string().required('Author is required'),
+  // genres: yup.array().min(1, 'At least one genre is required'),
+  // image: yup.mixed(),
+  // .test('fileSize', 'File size is too large (max 5MB)', (value) => {
+  //   if (!value) return true
+  //   return value.size <= FILE_SIZE
+  // })
+  // .test('fileFormat', 'Unsupported Format (jpg, jpeg, png)', (value) => {
+  //   if (!value) return true
+  //   return SUPPORTED_FORMATS.includes(value.type)
+  // }),
+  // imageUrl: yup.string().url('Must be a valid URL'),
 })
+// .test('oneOf', 'Either image or image URL is required', function (value) {
+//   return (value.image && value.imageUrl) || (!value.image && !value.imageUrl)
+// })
 
 const UpsertMangaModal = (props) => {
-  const { idManga, handleClose, refetchGenres } = props
+  const { idManga, handleClose, refetchMangas } = props
   const [searchParams, setSearchParams] = useSearchParams()
   const open = idManga !== null
 
-  const sort = searchParams.get('sort') || 'createdAt-desc'
-  const sortBy = sort ? sort.split('-')[0] : null
-  const sortOrder = sort ? sort.split('-')[1] : null
-  const currentPage = Number(searchParams.get('currentPage')) || 1
-  const pageSize = Number(searchParams.get('pageSize')) || 10
-  const keyword = searchParams.get('q') || ''
+  const { createManga, isLoading: isCreating } = useCreateManga()
 
   const {
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   })
 
   const onReset = () => {
-    reset({ description: '', name: '' })
+    reset({ description: '', name: '', file: null })
   }
 
   const onSubmit = async (data) => {
     console.log('🚀 ~ onSubmit ~ data:', data)
-    // const switchApi = id ? updateGenre(id, data) : createGenre(data)
-    // await switchApi
-    // refetchGenres()
-    // handleClose()
-    // onReset()
+    const formData = new FormData()
+    formData.append('name', data.name)
+    formData.append('description', data.description)
+    formData.append('status', 'processing')
+    formData.append('author', 'Eiichiro Oda')
+    // data.genres.forEach((genre) => formData.append('genres[]', genre))
+    // if (data.image) {
+    formData.append('image', data.image)
+    // } else if (data.imageUrl) {
+    formData.append('imageUrl', data.imageUrl)
+    // }
+    try {
+      await createManga(formData)
+      refetchMangas()
+      handleClose()
+      onReset()
+    } catch (error) {
+      if (data.image) {
+        formData.append('image', data.image)
+      }
+    }
   }
+
+  const imageOption = watch('image') ? 'file' : 'url'
 
   //   useEffect(() => {
   //     if (!_isEmpty(genre)) {
@@ -86,7 +120,7 @@ const UpsertMangaModal = (props) => {
               Name
             </InputLabel>
             <Controller
-              name="genre_name"
+              name="name"
               control={control}
               render={({ field }) => (
                 <BootstrapInput
@@ -94,8 +128,8 @@ const UpsertMangaModal = (props) => {
                   sx={{ '& > input': { width: '100% !important' } }}
                   id="bootstrap-input"
                   placeholder="Enter Name..."
-                  error={!!errors.genre_name}
-                  helperText={errors.genre_name ? errors.genre_name.message : ''}
+                  error={!!errors.name}
+                  helperText={errors.name ? errors.name.message : ''}
                 />
               )}
             />
@@ -110,6 +144,56 @@ const UpsertMangaModal = (props) => {
               render={({ field }) => <BootstrapInput {...field} sx={{ '& > textarea': { width: '100% !important' } }} multiline rows={4} />}
             />
           </FormControl>
+          <FormControlLabel
+            control={<Controller name="useImageUrl" control={control} defaultValue={false} render={({ field }) => <Checkbox {...field} checked={field.value} />} />}
+            label="Use Image URL instead of uploading a file"
+          />
+          {watch('useImageUrl') ? (
+            <FormControl variant="standard" fullWidth>
+              <InputLabel shrink htmlFor="image-url-input" sx={{ fontSize: '1rem' }}>
+                Image URL
+              </InputLabel>
+              <Controller
+                name="imageUrl"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    id="image-url-input"
+                    placeholder="Enter Image URL..."
+                    error={!!errors.imageUrl}
+                    helperText={errors.imageUrl ? errors.imageUrl.message : ''}
+                    variant="standard"
+                    fullWidth
+                  />
+                )}
+              />
+            </FormControl>
+          ) : (
+            <FormControl variant="standard" fullWidth>
+              <InputLabel shrink htmlFor="image-upload" sx={{ fontSize: '1rem' }}>
+                Upload Image
+              </InputLabel>
+              <Controller
+                name="image"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0]
+                        field.onChange(file)
+                      }}
+                      style={{ marginTop: '10px' }}
+                    />
+                    {errors.image && <Typography color="error">{errors.image.message}</Typography>}
+                  </>
+                )}
+              />
+            </FormControl>
+          )}
         </Stack>
       </DialogContent>
       <DialogActions sx={{ padding: '1.5rem !important' }}>
@@ -122,13 +206,7 @@ const UpsertMangaModal = (props) => {
         >
           Cancel
         </Button>
-        <LoadingButton
-          //   loading={isCreating || isUpdating}
-          loadingPosition="start"
-          startIcon={<SaveOutlined />}
-          variant="contained"
-          onClick={handleSubmit(onSubmit)}
-        >
+        <LoadingButton loading={isCreating} loadingPosition="start" startIcon={<SaveOutlined />} variant="contained" onClick={handleSubmit(onSubmit)}>
           Save
         </LoadingButton>
       </DialogActions>
