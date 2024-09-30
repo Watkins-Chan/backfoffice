@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
@@ -48,6 +49,11 @@ const UpsertMangaModal = (props) => {
   const open = idManga !== null
 
   const { createManga, isLoading: isCreating } = useCreateManga()
+  const [useImageUrl, setUseImageUrl] = useState(false)
+
+  const handleCheckboxUseImageUrl = (event) => {
+    setUseImageUrl(event.target.checked)
+  }
 
   const {
     control,
@@ -65,30 +71,28 @@ const UpsertMangaModal = (props) => {
 
   const onSubmit = async (data) => {
     console.log('🚀 ~ onSubmit ~ data:', data)
-    const formData = new FormData()
-    formData.append('name', data.name)
-    formData.append('description', data.description)
-    formData.append('status', 'processing')
-    formData.append('author', 'Eiichiro Oda')
-    // data.genres.forEach((genre) => formData.append('genres[]', genre))
-    // if (data.image) {
-    formData.append('image', data.image)
-    // } else if (data.imageUrl) {
-    formData.append('imageUrl', data.imageUrl)
+    // const formData = new FormData()
+    // formData.append('name', data.name)
+    // formData.append('description', data.description)
+    // formData.append('status', 'processing')
+    // formData.append('author', 'Eiichiro Oda')
+    // // data.genres.forEach((genre) => formData.append('genres[]', genre))
+    // // if (data.image) {
+    // formData.append('image', data.image)
+    // // } else if (data.imageUrl) {
+    // formData.append('imageUrl', data.imageUrl)
+    // // }
+    // try {
+    //   await createManga(formData)
+    //   refetchMangas()
+    //   handleClose()
+    //   onReset()
+    // } catch (error) {
+    //   if (data.image) {
+    //     formData.append('image', data.image)
+    //   }
     // }
-    try {
-      await createManga(formData)
-      refetchMangas()
-      handleClose()
-      onReset()
-    } catch (error) {
-      if (data.image) {
-        formData.append('image', data.image)
-      }
-    }
   }
-
-  const imageOption = watch('image') ? 'file' : 'url'
 
   //   useEffect(() => {
   //     if (!_isEmpty(genre)) {
@@ -145,10 +149,11 @@ const UpsertMangaModal = (props) => {
             />
           </FormControl>
           <FormControlLabel
-            control={<Controller name="useImageUrl" control={control} defaultValue={false} render={({ field }) => <Checkbox {...field} checked={field.value} />} />}
+            sx={{ '& .MuiCheckbox-root': { padding: 0, marginRight: 1 } }}
+            control={<Checkbox checked={useImageUrl} onChange={handleCheckboxUseImageUrl} inputProps={{ 'aria-label': 'controlled' }} />}
             label="Use Image URL instead of uploading a file"
           />
-          {watch('useImageUrl') ? (
+          {useImageUrl ? (
             <FormControl variant="standard" fullWidth>
               <InputLabel shrink htmlFor="image-url-input" sx={{ fontSize: '1rem' }}>
                 Image URL
@@ -157,13 +162,12 @@ const UpsertMangaModal = (props) => {
                 name="imageUrl"
                 control={control}
                 render={({ field }) => (
-                  <TextField
+                  <BootstrapInput
                     {...field}
                     id="image-url-input"
                     placeholder="Enter Image URL..."
                     error={!!errors.imageUrl}
                     helperText={errors.imageUrl ? errors.imageUrl.message : ''}
-                    variant="standard"
                     fullWidth
                   />
                 )}
@@ -186,7 +190,7 @@ const UpsertMangaModal = (props) => {
                         const file = e.target.files[0]
                         field.onChange(file)
                       }}
-                      style={{ marginTop: '10px' }}
+                      style={{ marginTop: '1.5rem' }}
                     />
                     {errors.image && <Typography color="error">{errors.image.message}</Typography>}
                   </>
