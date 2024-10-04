@@ -30,7 +30,7 @@ const MangaCard = (props) => {
       <CardMedia sx={{ objectFit: 'contain' }} component="img" height="194" image={_get(manga, 'image.url', _get(manga, 'imageUrl', ''))} alt={_get(manga, 'name', '')} />
       <CardContent>
         <Typography textTransform="uppercase" color={theme.palette.grey[500]}>
-          {_get(manga, 'author', '')}
+          {_get(manga, 'author.author_name', '')}
         </Typography>
         <Typography
           variant="h5"

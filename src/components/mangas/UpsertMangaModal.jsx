@@ -26,7 +26,7 @@ import TextField from '@mui/material/TextField'
 import { CloseOutlined, SaveOutlined } from '@ant-design/icons'
 import BootstrapDialog from 'components/common/modals/BootstrapDialog'
 import BootstrapInput from 'components/common/inputs/BootstrapInput'
-import { useCreateManga } from 'hooks/useMangas'
+import { useCreateManga, useUpdateManga } from 'hooks/useMangas'
 import { useAuthors } from 'hooks/useAuthors'
 import { useGenres } from 'hooks/useGenres'
 
@@ -44,6 +44,7 @@ const UpsertMangaModal = (props) => {
   const open = idManga !== null
 
   const { createManga, isLoading: isCreating } = useCreateManga()
+  const { updateManga, isLoading: isUpdating } = useUpdateManga()
   const { data: authors, isLoading: isGettingAuthors } = useAuthors()
   const { data: genres, isLoading: isGettingGenres } = useGenres()
 
@@ -101,8 +102,8 @@ const UpsertMangaModal = (props) => {
     formData.append('name', _get(data, 'name', ''))
     formData.append('description', _get(data, 'description', ''))
     formData.append('status', _lowerCase(data.status))
-    formData.append('author', _get(data, 'author.author_name', ''))
-    _forEach(_get(data, 'genres', []), (genre) => formData.append('genres[]', _get(genre, 'genre_name', '')))
+    formData.append('author', _get(data, 'author._id', ''))
+    _forEach(_get(data, 'genres', []), (genre) => formData.append('genres[]', _get(genre, '_id', '')))
     if (useImageUrl) {
       formData.append('imageUrl', _get(data, 'imageUrl'))
     } else {

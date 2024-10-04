@@ -8,6 +8,7 @@ const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')))
 const Genres = Loadable(lazy(() => import('pages/genres/index')))
 const Authors = Loadable(lazy(() => import('pages/authors/index')))
 const Manga = Loadable(lazy(() => import('pages/manga/index')))
+const Chapters = Loadable(lazy(() => import('pages/chapters/index')))
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -30,6 +31,10 @@ const MainRoutes = {
     {
       path: '/manga',
       element: <Manga />,
+    },
+    {
+      path: '/chapters',
+      element: <Chapters />,
     },
   ],
 }

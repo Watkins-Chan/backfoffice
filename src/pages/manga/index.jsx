@@ -51,19 +51,25 @@ export default function Manga() {
     }
   }
 
-  const handleOpenUpsertModal = useCallback((_, id) => {
+  const handleOpenInsertModal = useCallback((_, id) => {
     setIdManga(id ?? false)
+  }, [])
+
+  const handleOpenUpdateModal = useCallback((id) => {
+    setIdManga(id)
   }, [])
 
   const handleCloseUpsertModal = useCallback(() => {
     setIdManga(null)
+    setSelectedId(null)
   }, [])
 
   const actions = [
     {
       name: 'Edit',
       func: () => {
-        console.log('Edit'), closePopover()
+        closePopover()
+        handleOpenUpdateModal(selectedId)
       },
     },
     {
@@ -86,7 +92,7 @@ export default function Manga() {
               <Stack direction="row" alignItems="center" spacing={1}>
                 <SortOptions />
                 <UploadButton onFileUpload={handleFileUpload} isLoading={isUploading} />
-                <AddNewButton onClick={handleOpenUpsertModal} />
+                <AddNewButton onClick={handleOpenInsertModal} />
               </Stack>
             </Grid>
           </Grid>
@@ -98,16 +104,18 @@ export default function Manga() {
                 <Typography>Loading...</Typography>
               </Grid>
             )}
-            {_map(_get(mangas, 'data', []), (manga, index) => (
-              <Grid key={index} item xs={12} sm={4} md={3}>
-                <MangaCard
-                  manga={manga}
-                  onActions={(event) => {
-                    openPopover(event, index + 1), setSelectedId(index + 1)
-                  }}
-                />
-              </Grid>
-            ))}
+            {_map(_get(mangas, 'data', []), (manga, index) => {
+              return (
+                <Grid key={index} item xs={12} sm={4} md={3}>
+                  <MangaCard
+                    manga={manga}
+                    onActions={(event) => {
+                      openPopover(event, _get(manga, '_id', '')), setSelectedId(_get(manga, '_id', ''))
+                    }}
+                  />
+                </Grid>
+              )
+            })}
             {!isGettingMangas && _isEmpty(_get(mangas, 'data', [])) && (
               <Grid item xs={12}>
                 <EmptyData />

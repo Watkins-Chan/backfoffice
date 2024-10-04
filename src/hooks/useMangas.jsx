@@ -1,4 +1,4 @@
-import { createItem, fetchAll, uploadFile } from 'api/apiClient'
+import { createItem, fetchAll, fetchOne, updateItem, uploadFile } from 'api/apiClient'
 import { MANGA_PAGE_SIZE, CURRENT_PAGE } from 'constants'
 import { useAlert } from 'contexts/AlertContent'
 import { useApi } from 'customHooks/useApi'
@@ -11,6 +11,11 @@ export const useMangas = (pageSize = MANGA_PAGE_SIZE, currentPage = CURRENT_PAGE
     fetchAll(endpoint, { pageSize, currentPage, q, sortBy, sortOrder }),
   )
   return { data, error, isLoading, mutate }
+}
+
+export const useManga = (id) => {
+  const { data, error } = useSWR(id ? `${endpoint}/${id}` : null, fetchOne)
+  return { data, error }
 }
 
 export const useUploadMangas = () => {
@@ -47,4 +52,23 @@ export const useCreateManga = () => {
   }
 
   return { createManga, isLoading }
+}
+
+export const useUpdateManga = () => {
+  const { execute, isLoading } = useApi((id, updatedManga) => updateItem(endpoint, id, updatedManga))
+  const alert = useAlert()
+
+  const updateManga = async (id, updatedManga) => {
+    try {
+      const updated = await execute(id, updatedManga)
+      mutate(endpoint)
+      alert('Manga updated successfully!', 'success')
+      return updated
+    } catch (error) {
+      alert('Failed to update manga.', 'error')
+      throw error
+    }
+  }
+
+  return { updateManga, isLoading }
 }
