@@ -20,6 +20,15 @@ const MangaCard = (props) => {
     <Card variant="outlined" sx={{ height: '100%' }}>
       <CardHeader
         title={_get(manga, 'name', '')}
+        titleTypographyProps={{
+          sx: {
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          },
+        }}
         subheader={format(parseISO(_get(manga, 'createdAt')), 'MMMM dd, yyyy')}
         action={
           <IconButton aria-label="settings" onClick={onActions}>

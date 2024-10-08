@@ -1,4 +1,4 @@
-import { createItem, fetchAll, fetchOne, updateItem, uploadFile } from 'api/apiClient'
+import { createItem, deleteItem, fetchAll, fetchOne, updateItem, uploadFile } from 'api/apiClient'
 import { MANGA_PAGE_SIZE, CURRENT_PAGE } from 'constants'
 import { useAlert } from 'contexts/AlertContent'
 import { useApi } from 'customHooks/useApi'
@@ -71,4 +71,23 @@ export const useUpdateManga = () => {
   }
 
   return { updateManga, isLoading }
+}
+
+export const useDeleteManga = () => {
+  const { execute, isLoading } = useApi((id) => deleteItem(endpoint, id))
+  const alert = useAlert()
+
+  const deleteManga = async (id) => {
+    try {
+      const deleted = await execute(id)
+      mutate(endpoint)
+      alert('Manga deleted successfully!', 'success')
+      return deleted
+    } catch (error) {
+      alert('Failed to delete manga.', 'error')
+      throw error
+    }
+  }
+
+  return { deleteManga, isLoading }
 }

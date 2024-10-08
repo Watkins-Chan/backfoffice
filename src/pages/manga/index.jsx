@@ -12,7 +12,7 @@ import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import RowPerPageSelector from 'components/common/dropdowns/RowPerPageSelector '
 import PaginationControl from 'components/common/navigation/PaginationControl'
-import { useMangas, useUploadMangas } from 'hooks/useMangas'
+import { useMangas, useUploadMangas, useDeleteManga } from 'hooks/useMangas'
 
 import SearchBar from 'components/common/inputs/SearchBar'
 import SortOptions from 'components/common/dropdowns/SortOptions'
@@ -24,9 +24,12 @@ import UpsertMangaModal from 'components/mangas/UpsertMangaModal'
 import MangaCard from 'components/mangas/MangaCard'
 import { useMenuActions } from 'contexts/MenuActionsContext'
 import MenuActions from 'components/common/dropdowns/MenuActions'
+import DeleteModal from 'components/common/modals/DeleteModal'
+import { useHandleDeleteModal } from 'contexts/DeleteModalContext'
 
 export default function Manga() {
   const [searchParams] = useSearchParams()
+  const { openDeleteModal, handleOpenDeleteModal } = useHandleDeleteModal()
 
   const { openPopover, closePopover } = useMenuActions()
   const [idManga, setIdManga] = useState(null)
@@ -42,6 +45,7 @@ export default function Manga() {
 
   const { data: mangas, isLoading: isGettingMangas, mutate: refetchMangas } = useMangas(pageSize, currentPage, searchKeyword, sortBy, sortOrder)
   const { uploadMangas, isLoading: isUploading } = useUploadMangas()
+  const { deleteManga, isLoading: isDeleting } = useDeleteManga()
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0]
@@ -75,6 +79,7 @@ export default function Manga() {
     {
       name: 'Delete',
       func: () => {
+        handleOpenDeleteModal(selectedId)
         closePopover()
       },
     },
@@ -136,6 +141,7 @@ export default function Manga() {
       </Stack>
       <MenuActions actions={actions} />
       {idManga !== null && <UpsertMangaModal idManga={idManga} handleClose={handleCloseUpsertModal} refetchMangas={refetchMangas} />}
+      {openDeleteModal && <DeleteModal isDeleting={isDeleting} handleDelete={() => deleteManga(selectedId)} refetchGenres={refetchMangas} />}
     </React.Fragment>
   )
 }

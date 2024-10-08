@@ -66,9 +66,7 @@ const UpsertMangaModal = (props) => {
     handleSubmit,
     reset,
     watch,
-    setValue,
     resetField,
-    getValues,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -159,7 +157,7 @@ const UpsertMangaModal = (props) => {
     } else if (!idManga) {
       onReset()
     }
-  }, [idManga, manga, authors, genres, reset, getValues])
+  }, [idManga, manga, authors, genres, reset])
 
   return (
     <BootstrapDialog key={idManga} maxWidth="sm" fullWidth scroll="body" onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
