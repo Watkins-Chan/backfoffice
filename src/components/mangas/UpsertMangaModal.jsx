@@ -119,15 +119,12 @@ const UpsertMangaModal = (props) => {
     formData.append('description', _get(data, 'description', ''))
     formData.append('status', _lowerCase(data.status))
     formData.append('author', _get(data, 'author._id', ''))
-    // _forEach(_get(data, 'genres', []), (genre) => formData.append('genres[]', _get(genre, '_id', '')))
+    _forEach(_get(data, 'genres', []), (genre) => formData.append('genres[]', _get(genre, '_id', '')))
     if (useImageUrl) {
       formData.append('imageUrl', _get(data, 'imageUrl'))
     } else {
       formData.append('image', _get(data, 'image'))
     }
-    formData.forEach((value, key) => {
-      console.log(`${key}:`, value)
-    })
     const switchApi = idManga ? updateManga(idManga, formData) : createManga(formData)
     await switchApi
     refetchMangas()
@@ -391,7 +388,7 @@ const UpsertMangaModal = (props) => {
         >
           Cancel
         </Button>
-        <LoadingButton loading={isCreating} loadingPosition="start" startIcon={<SaveOutlined />} variant="contained" onClick={handleSubmit(onSubmit)}>
+        <LoadingButton loading={isCreating || isUpdating} loadingPosition="start" startIcon={<SaveOutlined />} variant="contained" onClick={handleSubmit(onSubmit)}>
           Save
         </LoadingButton>
       </DialogActions>

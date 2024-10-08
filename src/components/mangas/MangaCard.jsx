@@ -17,7 +17,7 @@ const MangaCard = (props) => {
   const theme = useTheme()
 
   return (
-    <Card variant="outlined" sx={{ height: '100%', '&:hover': { cursor: 'pointer', boxShadow: theme.shadows[10] } }}>
+    <Card variant="outlined" sx={{ height: '100%' }}>
       <CardHeader
         title={_get(manga, 'name', '')}
         subheader={format(parseISO(_get(manga, 'createdAt')), 'MMMM dd, yyyy')}
@@ -27,7 +27,14 @@ const MangaCard = (props) => {
           </IconButton>
         }
       />
-      <CardMedia sx={{ objectFit: 'contain' }} component="img" height="194" image={_get(manga, 'image.url', _get(manga, 'imageUrl', ''))} alt={_get(manga, 'name', '')} />
+      <CardMedia
+        sx={{ objectFit: 'contain' }}
+        loading="lazy"
+        component="img"
+        height="194"
+        src={_get(manga, 'image.url', _get(manga, 'imageUrl', ''))}
+        alt={_get(manga, 'name', '')}
+      />
       <CardContent>
         <Typography textTransform="uppercase" color={theme.palette.grey[500]}>
           {_get(manga, 'author.author_name', '')}
