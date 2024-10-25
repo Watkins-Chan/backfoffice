@@ -5,8 +5,6 @@ import * as yup from 'yup'
 import { useSearchParams } from 'react-router-dom'
 
 import _get from 'lodash/get'
-import _lowerCase from 'lodash/lowerCase'
-import _upperCase from 'lodash/upperCase'
 import _forEach from 'lodash/forEach'
 import _isEmpty from 'lodash/isEmpty'
 import _find from 'lodash/find'
@@ -38,9 +36,26 @@ import { useGenres } from 'hooks/useGenres'
 const statusOptions = ['PROGRESSING', 'COMPLETED']
 
 const schema = yup.object().shape({
-  name: yup.string().required('Name is required'),
-  description: yup.string(),
-  author: yup.object().required('Author is required'),
+  name: yup.string().required('Name is required').max(100, 'Name cannot exceed 100 characters'),
+  description: yup.string().max(1000, 'Description cannot exceed 1000 characters').nullable(),
+  status: yup.string().required('Status is required').oneOf(statusOptions, 'Invalid status selected'),
+  author: yup
+    .object()
+    .shape({
+      _id: yup.string().required('Author ID is required'),
+      author_name: yup.string().required('Author name is required'),
+    })
+    .required('Author is required'),
+  genres: yup
+    .array()
+    .of(
+      yup.object().shape({
+        _id: yup.string().required('Genre ID is required'),
+        genre_name: yup.string().required('Genre name is required'),
+      }),
+    )
+    .min(1, 'At least one genre must be selected')
+    .required('Genres are required'),
 })
 
 const UpsertMangaModal = (props) => {
@@ -115,7 +130,7 @@ const UpsertMangaModal = (props) => {
     const formData = new FormData()
     formData.append('name', _get(data, 'name', ''))
     formData.append('description', _get(data, 'description', ''))
-    formData.append('status', _lowerCase(data.status))
+    formData.append('status', data.status)
     formData.append('author', _get(data, 'author._id', ''))
     _forEach(_get(data, 'genres', []), (genre) => formData.append('genres[]', _get(genre, '_id', '')))
     if (useImageUrl) {
